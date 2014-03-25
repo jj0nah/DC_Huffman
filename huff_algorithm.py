@@ -40,7 +40,7 @@ class BT_Leaf(BT_Node):
 		
 
 
-text_string="straszna dupa i w ogolefdkzljc zxcvlzkj czk ajd lkjvlkxjxzlk cjaslk dj"
+text_string="proba abcdwef xzcpobvxc ad kjfjlgfjk hkjhgcvxcbcxv rerygirtuygkjnv vmxbmzxcb"
 print(text_string)
 LowValSymbol=32 #space
 HighValSymbol=125 # }- character
