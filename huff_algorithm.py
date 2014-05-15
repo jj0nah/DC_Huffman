@@ -7,22 +7,13 @@
 #############################################################################
 
 import pydot
-global graphenn
-graphenn = pydot.Dot(graph_type='digraph')
+global BTGraph
+BTGraph = pydot.Dot(graph_type='digraph')
 
 global 	gBT_IdNumber
-global 	population
 gBT_IdNumber=0;
 global nodeCount
 nodeCount=int(0)
-global tempNodeLst
-tempNodeLst=list()
-global tempEdgeLst
-tempEdgeLst=list()
-
-
-
-
 
 # @brief  General Binary tree node class prototype 
 class TBinTree_Node(object):
@@ -81,6 +72,7 @@ class TBinTree_Leaf(TBinTree_Node):
 		self.lvl = node_lvl
 		self.b_zero = None
 		self.b_one = None
+		self.code = None
 
 # @brief  Leaf instance behaviour if "print" is used with it
 	
@@ -163,7 +155,7 @@ class TBinTree_Tree:
 		self.LeavesList = Leaves.GetNodeList()
 		self.All_leaves = list()
 		self.All_edges = list()
-		#self.
+		self.CodeList = dict()
 	def __call__(self):
 		# old self.root = fBinaryTreeBuilder(self.LeavesList,self.pPopulation, 0)
 		self.root = fBinaryTreeBuilder(self.LeavesList, 0)
@@ -173,9 +165,64 @@ class TBinTree_Tree:
 		#global graphen
 		print "Starting graph generating..."
 		fBinaryTreeNodeCartograph(self.root)
-		graphenn.write_png('example1_graph.png')
+		BTGraph.write_png('example1_graph.png')
 		print "Graph complete."
-		
+	def CodingListGenerator(self):
+		global gCodingDict		
+		print "Generating symbol coding list..."
+		fBinaryTreeNodeFinder(self.root,Action=1)
+	# print dictionary with symbol coding
+		dictKeys = gCodingDict.keys()
+		for x in range(0,len(gCodingDict)):
+			print  "%02d)\'%c\' -> %s"% (x,dictKeys[x],gCodingDict[dictKeys[x]])
+	def CodeMessage(self,MessageContent):
+		#TODO exception handling
+		codedMsg = ""
+		#codedMsg = "|"
+		print len(MessageContent)
+		for x in range(0,len(MessageContent)):
+			codedMsg = codedMsg + gCodingDict[ord(MessageContent[x])] #+ "|"
+		return codedMsg
+
+	def DecodeMessage(self,MessageContent):
+		global gTempCodedMsg
+		gTempCodedMsg = MessageContent[:] #copy coded message string into global variable string for further manipulations
+		tempString = ""
+		while (len(gTempCodedMsg)): #while there are bits of the coded message available run decoding of consecutive symbols in loop 		
+			symbol = fDecodeBit(self.root, gTempCodedMsg)
+			tempString= tempString + chr(symbol) # concatanate character symbol to string			
+			#print "%c" %(symb)
+		return tempString
+		#codedMsg = ""
+		#codedMsg = "|"
+		#print len(MessageContent)
+		#for x in range(0,len(MessageContent)):
+		#	codedMsg = codedMsg + gCodingDict[ord(MessageContent[x])] + "|"
+		#return codedMsg
+		print
+global gTempCodedMsg
+gTempCodedMsg = str()
+
+def fDecodeBit(CurrentNode,CodedMsg):
+	global gTempCodedMsg
+	gTempCodedMsg = CodedMsg
+	#if (CurrentNode!=None):
+	#	print CurrentNode
+	if (CurrentNode.__class__.__name__ == 'TBinTree_Leaf'):
+		return CurrentNode.symbol
+	elif (CurrentNode.__class__.__name__ == 'TBinTree_Node'):
+		if (len(CodedMsg)):
+			gTempCodedMsg = CodedMsg[1:]
+		if (CodedMsg[0]=='0') :
+			return fDecodeBit(CurrentNode.b_zero, CodedMsg[1:])
+		elif (CodedMsg[0]=='1') :
+			return fDecodeBit(CurrentNode.b_one, CodedMsg[1:])
+		else :
+			print "!CodedStringError=notbit!"
+
+
+
+
 
 #########################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!###########################################################################
 def fBinaryTreeBuilder(LeavesList,Level) : # top-down method
@@ -238,13 +285,29 @@ def fBinaryTreeBuilder(LeavesList,Level) : # top-down method
 		return TBinTree_Node( Population, BinaryNodeZero, BinaryNodeOne, Level) 
 ###################################################################################################################################
 
+global gCodingDict
+gCodingDict = dict()
 
-def fBinaryTreeNodeFinder(CurrentNode, Action = None):
+def fBinaryTreeNodeFinder(CurrentNode, Action = None, Code = ""):#, gCodingDict= None):
 	if (Action == None):
 		print CurrentNode
 		if (CurrentNode.__class__.__name__ == 'TBinTree_Node'):
 			fBinaryTreeNodeFinder(CurrentNode.b_zero, Action)
 			fBinaryTreeNodeFinder(CurrentNode.b_one, Action)
+	elif (Action == 1):
+		#print "wio!!!"
+		tempText = str(Code)
+		#tempText = Code
+		if (CurrentNode.__class__.__name__ == 'TBinTree_Node'):
+			fBinaryTreeNodeFinder(CurrentNode.b_zero, Action,Code = (tempText+'0')) 
+			fBinaryTreeNodeFinder(CurrentNode.b_one, Action,Code = (tempText+'1')) 
+		elif (CurrentNode.__class__.__name__ == 'TBinTree_Leaf'):
+			#fBinaryTreeNodeFinder(CurrentNode.b_zero, Action,Code.join('0')
+			#fBinaryTreeNodeFinder(CurrentNode.b_one, Action,Code.join('1')
+		
+			#print "\'%c\':%s(%d)" % (CurrentNode.symbol, Code, CurrentNode.lvl) #, Code.join('0'))
+			gCodingDict[CurrentNode.symbol]=Code
+			#print "" (CurrentNode.symbol) #, Code.join('1'))
 
 
 def fBinaryTreeNodeCartograph(thisNode, Action = None):
@@ -254,13 +317,13 @@ def fBinaryTreeNodeCartograph(thisNode, Action = None):
 		currentNode=int(nodeCount)
 		if ( thisNode.__class__.__name__ == 'TBinTree_Leaf'):
 			node_parent = makeLeaf(thisNode)
-			graphenn.add_node(node_parent)
+			BTGraph.add_node(node_parent)
 			return node_parent
 			
 		else :
 
 			node_parent = makeNode(thisNode)	
-			graphenn.add_node(node_parent)
+			BTGraph.add_node(node_parent)
 	
 			node_zero = fBinaryTreeNodeCartograph(thisNode.b_zero)
 			node_one = fBinaryTreeNodeCartograph(thisNode.b_one)
@@ -273,7 +336,7 @@ def fBinaryTreeNodeCartograph(thisNode, Action = None):
 		return node_parent 
 
 def makeNode(thisNode):
-	tempStr="{%d|<f2>id=%d}" % (thisNode.b_zero.prob+thisNode.b_one.prob, thisNode.id)
+	tempStr="{%d|<f2>id=%d(%d)}" % (thisNode.b_zero.prob+thisNode.b_one.prob, thisNode.id,thisNode.lvl)
 	node_temp = pydot.Node(label=tempStr,shape="record",style="filled", fillcolor="brown")
 	node_temp.set_name(str(thisNode.id))
 	#print node_temp.to_string()
@@ -281,7 +344,7 @@ def makeNode(thisNode):
 	
 
 def makeLeaf(thisNode):
-	tempStr = "<f1>\'%c\'|{%d|id-%d}" % (thisNode.symbol, thisNode.prob, thisNode.id)
+	tempStr = "<f1>\'%c\'|{%d|id-%d(%d)}" % (thisNode.symbol, thisNode.prob, thisNode.id,thisNode.lvl)
 	node_temp = pydot.Node(label=tempStr,shape="record",style="filled", fillcolor="green")
 	node_temp.set_name(str(thisNode.id))
 	#print node_temp.to_string()
@@ -291,7 +354,7 @@ def makeLeaf(thisNode):
 def draw(node_parent,node_child):
 	edge = pydot.Edge(node_parent,node_child)
 	#print edge.to_string()
-	graphenn.add_edge(edge)
+	BTGraph.add_edge(edge)
 
 
 
@@ -303,7 +366,8 @@ def main():
 	f = open(filename, 'r')
 	strSourceData = f.read()
 	f.close()
-	
+	MessageContent="Tsrrr"
+
 	#initialize instance of Binary tree node generator with string (from file)
 	NodeStorage = TBinTree_NodeGenerator(strSourceData)
 	
@@ -313,11 +377,15 @@ def main():
 	NodeStorage.SortedLeafGen()
 	#print Grader.GetNodeList()
 	Generator = TBinTree_Tree(NodeStorage)
-	Generator();
+	Generator()
 	print "\n\r"
-	#Generator.ShowBT();
-	Generator.GraphGen();
-
+	Generator.ShowBT()
+	#Generator.GraphGen();
+	Generator.CodingListGenerator()
+	codedMsg = Generator.CodeMessage(MessageContent)
+	print codedMsg
+	decodedMsg = Generator.DecodeMessage(codedMsg)
+	print decodedMsg
 
 if __name__ == '__main__':
     main()
