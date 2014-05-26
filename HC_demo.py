@@ -54,9 +54,9 @@ class ImageWidget(QtGui.QLabel):
 class Ui_MainWindow(object):
     def __init__(self):
         super(Ui_MainWindow, self).__init__()
-	#self.filedata = str()
 	self.filename1_src = str()
-	#self.text = str()
+	self.filename2_msg = str()
+
     def setupUi(self, MainWindow):
 	MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(800, 640)
@@ -114,6 +114,14 @@ class Ui_MainWindow(object):
         self.page_2.setGeometry(QtCore.QRect(0, 0, 190, 330))
         self.page_2.setObjectName(_fromUtf8("page_2"))
         
+	self.label_4 = QtGui.QLabel(self.page_2)
+        self.label_4.setGeometry(QtCore.QRect(0, 0, 180, 20))
+        self.label_4.setObjectName(_fromUtf8("label_4"))
+	
+        self.pushButton_2 = QtGui.QPushButton(self.page_2)
+        self.pushButton_2.setGeometry(QtCore.QRect(0, 180, 190, 40))
+        self.pushButton_2.setObjectName(_fromUtf8("pushButton"))
+
 	self.textEdit3_msg = MessageTextEdit(self.page_2)
         self.textEdit3_msg.setGeometry(QtCore.QRect(0, 30, 190, 140))
         self.textEdit3_msg.setObjectName(_fromUtf8("textEdit_3"))
@@ -150,6 +158,7 @@ class Ui_MainWindow(object):
         self.tabWidget = QtGui.QTabWidget(self.centralwidget)
         self.tabWidget.setGeometry(QtCore.QRect(240, 10, 550, 530))
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
+
 ################################################################################
 ###### TAB page 1
 ################################################################################
@@ -166,10 +175,29 @@ class Ui_MainWindow(object):
         self.label_3.setObjectName(_fromUtf8("label_3"))
 
         self.textEdit2_srclist = QtGui.QTextEdit(self.tab)
-        self.textEdit2_srclist.setGeometry(QtCore.QRect(4, 52, 170, 400))
+        self.textEdit2_srclist.setGeometry(QtCore.QRect(4, 52, 170, 430))
         self.textEdit2_srclist.setObjectName(_fromUtf8("textEdit_2"))
 	self.textEdit2_srclist.setReadOnly(True)
+
+	self.label_5 = QtGui.QLabel(self.tab)
+        self.label_5.setGeometry(QtCore.QRect(182, 26, 180, 20))
+        self.label_5.setObjectName(_fromUtf8("label_5"))
+
+      	self.textEdit4_msgcoded = QtGui.QTextEdit(self.tab)
+        self.textEdit4_msgcoded.setGeometry(QtCore.QRect(182, 52, 350, 200))
+        self.textEdit4_msgcoded.setObjectName(_fromUtf8("textEdit_4"))
+	self.textEdit4_msgcoded.setReadOnly(True)
+
+	self.label_6 = QtGui.QLabel(self.tab)
+        self.label_6.setGeometry(QtCore.QRect(182, 266, 180, 20))
+        self.label_6.setObjectName(_fromUtf8("label_6"))
+
+      	self.textEdit5_decoded = QtGui.QTextEdit(self.tab)
+        self.textEdit5_decoded.setGeometry(QtCore.QRect(182, 302, 350, 180))
+        self.textEdit5_decoded.setObjectName(_fromUtf8("textEdit_5"))
+	self.textEdit5_decoded.setReadOnly(True)
 	#self.textEdit2_srclist.connect(self.textEdit1_src,QtCore.SIGNAL("textChanged()"),self.textEdit1_src,QtCore.SLOT("slotTextChanged()"))
+
 ################################################################################
 ###### TAB page 2
 ################################################################################
@@ -206,6 +234,7 @@ class Ui_MainWindow(object):
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 30))
         self.menubar.setObjectName(_fromUtf8("menubar"))
+
 ################################################################################
 ###### MENU1 OBJECT
 ################################################################################
@@ -265,8 +294,8 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.toolBox.setCurrentIndex(0)
 	QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.generateHCBinTree)
+	QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL(_fromUtf8("clicked()")), self.codeMessage)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
 
 ################# Menu Actions ##################################################################
 
@@ -275,7 +304,7 @@ class Ui_MainWindow(object):
 ################################################################################
 
     def newFile(self):
-	#newFileSelect = dict()
+	newFileSelect = dict()
 	#python switch-case quivalent...
 	newFileSelect = { 0 : self.newFile1_Src, \
 		1 : self.newFile2_Msg, \
@@ -346,6 +375,7 @@ class Ui_MainWindow(object):
 	openFileSelect[toolboxIndex]()
 
     def openFile1_Src(self):
+	#filename = 'sourcedata.txt'
 	filename = QtGui.QFileDialog.getOpenFileName(MainWindow, 'Open File', os.getenv('PWD'))
 	try:
 		if (filename):		
@@ -367,40 +397,50 @@ class Ui_MainWindow(object):
 
 ########################################## Test for replacement of images inside tab2 TODO resize and scrolladjustment problems 
     def openFile2_Msg(self):
-	print "openFile2 ongoing..."
-	#fileName = str()
-	fileName = QtGui.QFileDialog.getOpenFileName(MainWindow, 'Open File', os.getenv('PWD'))
-	if fileName:
-		image = QtGui.QImage(fileName)
-		if image.isNull():
-			print "wrong image file"
-			return	
-		self.picture = QtGui.QPixmap(fileName)
-		self.graphicsView.resize(self.picture.size())
-		self.graphicsView.setPixmap(QtGui.QPixmap.fromImage(image))
-		
-	        self.graphicsView.setBackgroundRole(QtGui.QPalette.Base)
-      		self.graphicsView.setSizePolicy(QtGui.QSizePolicy.Ignored,
-                	QtGui.QSizePolicy.Ignored)
+	filename = QtGui.QFileDialog.getOpenFileName(MainWindow, 'Open File', os.getenv('PWD'))
+	#filename = 'msgdata.txt'	
+	try:
+		if (filename):		
+			f = open(filename, 'r')
+	except IOError:
+		print "Exc(0x02): None file picked or no permission. Aborting file load..."
+		return
 
-		self.scrollArea.setWidget(self.graphicsView)
+	try:
+		filedata = f.read()
+	except UnboundLocalError:
+		print "Exc(0x04): File pathway variable not initialized. Aborting file load..."		
+		return 
+	self.filename2_msg = filename[:]
+	self.saveAction.setDisabled(False)
+	self.textEdit3_msg.setText(filedata)
+	f.close()
 ########################################## ########################################## ########################################## 
 
 
     def test(self):
+	global gCodingDict
 	#print self.page.isVisible()
-	print self.toolBox.currentIndex()
+	#print self.toolBox.currentIndex()
+	#print self.Message
+	#print "\"" + str(self.Message) + "\""
+	print gCodingDict
+	print str(self.codedMessage)
 
 ################################################################################
 #	RETRANSLATE QT OBJECTS' NAMES 
 ################################################################################
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Huffman's Code Demo by J.Kiec", None, QtGui.QApplication.UnicodeUTF8))
+        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Huffman's Code Demo", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Generate BT", None, QtGui.QApplication.UnicodeUTF8))
+	self.pushButton_2.setText(QtGui.QApplication.translate("MainWindow", "Start coding", None, QtGui.QApplication.UnicodeUTF8))
         self.comboBox.setItemText(0, QtGui.QApplication.translate("MainWindow", "Top-down method", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MainWindow", "Huffman's Code binary tree generation", None, QtGui.QApplication.UnicodeUTF8))
-	self.label_2.setText(QtGui.QApplication.translate("MainWindow", "Source Statistics:", None, QtGui.QApplication.UnicodeUTF8))
+	self.label_2.setText(QtGui.QApplication.translate("MainWindow", "Source:", None, QtGui.QApplication.UnicodeUTF8))
 	self.label_3.setText(QtGui.QApplication.translate("MainWindow", "ASCII='char' : population", None, QtGui.QApplication.UnicodeUTF8))
+	self.label_4.setText(QtGui.QApplication.translate("MainWindow", "Message text", None, QtGui.QApplication.UnicodeUTF8))
+	self.label_5.setText(QtGui.QApplication.translate("MainWindow", "Coded Message:", None, QtGui.QApplication.UnicodeUTF8))
+	self.label_6.setText(QtGui.QApplication.translate("MainWindow", "Decoded Message:", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBox.setItemText(self.toolBox.indexOf(self.page), QtGui.QApplication.translate("MainWindow", "Source", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBox.setItemText(self.toolBox.indexOf(self.page_2), QtGui.QApplication.translate("MainWindow", "Message", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBox.setItemText(self.toolBox.indexOf(self.page_3), QtGui.QApplication.translate("MainWindow", "Coded message", None, QtGui.QApplication.UnicodeUTF8))
@@ -409,7 +449,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("MainWindow", "Summary", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("MainWindow", "Binary Tree View", None, QtGui.QApplication.UnicodeUTF8))
         self.menuMenu.setTitle(QtGui.QApplication.translate("MainWindow", "&Menu", None, QtGui.QApplication.UnicodeUTF8))
-        #self.actionLoad_source.setText(QtGui.QApplication.translate("MainWindow", "Load source", None, QtGui.QApplication.UnicodeUTF8))
+
 
 ################################################################################
 #	HC'S OPERATIONS 
@@ -422,7 +462,7 @@ class Ui_MainWindow(object):
 	tempText = tempText.replace(":", " ")
 	tempText = tempText.replace("\\", " ")	
 	tempText = tempText.replace(";", " ")
-	tempText = tempText.replace("\n", " ")
+	tempText = tempText.replace("\n", "")
 	tempText = tempText.replace("\r", " ")
 	tempText = tempText.replace(">", " ")
 	tempText = tempText.replace("<", " ")	
@@ -434,14 +474,15 @@ class Ui_MainWindow(object):
 	if ((len(tempText)<2) | (tempText=="")):	
 		self.textEdit2_srclist.setText("Empty!!")
 		return
-	NodeStorage = huff_algorithm.TBinTree_NodeGenerator(tempText)
-	NodeStorage.SortData()
-	NodeStorage.ListPrint()
-	NodeStorage.SortedLeafGen()
-	Generator = huff_algorithm.TBinTree_Tree(NodeStorage)
-	Generator()
-	Generator.GraphGen()
-	self.textEdit2_srclist.setText(NodeStorage.pListString)
+	self.NodeStorage = huff_algorithm.TBinTree_NodeGenerator(tempText)
+	self.NodeStorage.SortData()
+	self.NodeStorage.ListPrint()
+	self.NodeStorage.SortedLeafGen()
+	self.Generator = huff_algorithm.TBinTree_Tree(self.NodeStorage)
+	self.Generator()
+	self.Generator.GraphGen()
+	self.Generator.CodingListGenerator()
+	self.textEdit2_srclist.setText(self.NodeStorage.pListString)
 	image = QtGui.QImage("BT_graph.png")
 	if image.isNull():
 		print "wrong image file"
@@ -455,6 +496,11 @@ class Ui_MainWindow(object):
         	QtGui.QSizePolicy.Ignored)
 
 	self.scrollArea.setWidget(self.graphicsView)
+
+    def codeMessage(self):
+	self.Message = self.textEdit3_msg.toPlainText()	
+	self.codedMessage = self.Generator.CodeMessage(str(self.Message),1)	
+	self.textEdit4_msgcoded.setText(str(self.codedMessage))
 
 if __name__ == "__main__":
 	import sys

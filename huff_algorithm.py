@@ -1,9 +1,10 @@
 #############################################################################
-# @file    
-# @author 
-# @version 
+# @file    huff_algorithm.py
+# @author  J.Kiec
+# @version 1.0
 # @date    03.05.2014
-# @brief   
+# @brief   Huffman's Code operational code
+# 
 #############################################################################
 
 import pydot
@@ -119,6 +120,7 @@ class TBinTree_NodeGenerator:
 			if (x>0) :						# if character appears in string at least once
 				self.pSymbolsDict.update({ascii_code:x})	# put it into dictionary with ASCII code as key and no. of appearences as value
 				self.pPopulation +=x				# all counted symbols are added to total source data population
+		self.pListString = str()
 
 	def SortData(self): # creates list by sorting symbols along probability
 		for key, value in sorted(self.pSymbolsDict.iteritems(), key=lambda (k,v): (v,k),reverse=False):
@@ -137,10 +139,11 @@ class TBinTree_NodeGenerator:
 
 	def ListPrint(self):
 		print ("\r\nIn total = %d" % self.pPopulation)
-		
 		for i in range(0,len(self.pSymbolsList_sorted)):
 			print("%.3d=%c : %.3d" % (self.pSymbolsList_sorted[i][0],self.pSymbolsList_sorted[i][0], \
-			self.pSymbolsList_sorted[i][1]))
+				self.pSymbolsList_sorted[i][1]))
+			self.pListString = self.pListString + ("%.3d='%c' : %.3d\n" % (self.pSymbolsList_sorted[i][0],self.pSymbolsList_sorted[i][0], \
+				self.pSymbolsList_sorted[i][1]))
 	
 	def GetPopulation(self):
 		return self.pPopulation
@@ -165,7 +168,7 @@ class TBinTree_Tree:
 		#global graphen
 		print "Starting graph generating..."
 		fBinaryTreeNodeCartograph(self.root)
-		BTGraph.write_png('example1_graph.png')
+		BTGraph.write_png('BT_graph.png')
 		print "Graph complete."
 	def CodingListGenerator(self):
 		global gCodingDict		
@@ -175,14 +178,21 @@ class TBinTree_Tree:
 		dictKeys = gCodingDict.keys()
 		for x in range(0,len(gCodingDict)):
 			print  "%02d)\'%c\' -> %s"% (x,dictKeys[x],gCodingDict[dictKeys[x]])
-	def CodeMessage(self,MessageContent):
-		#TODO exception handling
-		codedMsg = ""
+	def CodeMessage(self,MessageContent, Action=None):
+		#TODO exception handling, what to do about unspecified symbol (not present in source)
+		
 		#codedMsg = "|"
-		print len(MessageContent)
-		for x in range(0,len(MessageContent)):
-			codedMsg = codedMsg + gCodingDict[ord(MessageContent[x])] #+ "|"
-		return codedMsg
+		if (Action==None):
+			codedMsg = ""
+			print len(MessageContent)
+			for x in range(0,len(MessageContent)): #TODO try KeyError -> dictionary unspecified key handling
+				codedMsg = codedMsg + gCodingDict[ord(MessageContent[x])] + "|"
+			return codedMsg
+		elif (Action==1):
+			codedMsg = list()
+			for x in range(0,len(MessageContent)):
+				codedMsg.append(gCodingDict[ord(MessageContent[x])])
+			return codedMsg
 
 	def DecodeMessage(self,MessageContent):
 		global gTempCodedMsg
@@ -200,6 +210,7 @@ class TBinTree_Tree:
 		#	codedMsg = codedMsg + gCodingDict[ord(MessageContent[x])] + "|"
 		#return codedMsg
 		print
+
 global gTempCodedMsg
 gTempCodedMsg = str()
 
@@ -344,7 +355,7 @@ def makeNode(thisNode):
 	
 
 def makeLeaf(thisNode):
-	tempStr = "<f1>\'%c\'|{%d|id-%d(%d)}" % (thisNode.symbol, thisNode.prob, thisNode.id,thisNode.lvl)
+	tempStr = "<f1>\'%c\'|{%d|id=%d(%d)}" % (thisNode.symbol, thisNode.prob, thisNode.id,thisNode.lvl)
 	node_temp = pydot.Node(label=tempStr,shape="record",style="filled", fillcolor="green")
 	node_temp.set_name(str(thisNode.id))
 	#print node_temp.to_string()
@@ -356,8 +367,17 @@ def draw(node_parent,node_child):
 	#print edge.to_string()
 	BTGraph.add_edge(edge)
 
-
-
+def clearGlobaVariables():
+	global BTGraph
+	global nodeCount
+	global gBT_IdNumber 
+	global gTempCodedMsg  
+	#global gCodingDict
+	BTGraph = pydot.Dot(graph_type='digraph')
+	nodeCount=int(0)
+	gBT_IdNumber=0
+	gTempCodedMsg = ""
+	#gCodingDict = dict()
 
 
 def main():
@@ -380,7 +400,7 @@ def main():
 	Generator()
 	print "\n\r"
 	Generator.ShowBT()
-	#Generator.GraphGen();
+	Generator.GraphGen();
 	Generator.CodingListGenerator()
 	codedMsg = Generator.CodeMessage(MessageContent)
 	print codedMsg
