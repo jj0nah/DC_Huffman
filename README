@@ -1,1 +1,20 @@
-23th MARCH 2014 - Creation of GitHub repo, setup and first activity with GitHub
+AD 2014 AGH UNIVERSITY OF SCIENCE AND TECHNOLOGY
+HUFFMAN'S CODE DEMONTRATION PROJECT FOR DIGITAL COMMUNICATIONS
+
+May 25, 2014
+GUI script has been added to repository
+
+May 15, 2014
+Codin and decoding of simple message implemented
+
+May 14, 2014
+Current status:
+- Huffman's code binary tree generation using top-down method
+- pydot handling: simple plot for Huffman's code binary tree generation
+  using bigraph and record shaped nodes
+
+Mar 25, 2014 
+huff_algorithm.py updated
+
+Mar 23, 2014 
+Creation of GitHub repo, setup and first activity with GitHub.
