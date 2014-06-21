@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #############################################################################
 # @file    huff_algorithm.py
 # @author  J.Kiec
@@ -8,6 +9,7 @@
 #############################################################################
 
 import pydot
+import numpy as np
 global BTGraph
 BTGraph = pydot.Dot(graph_type='digraph')
 
@@ -18,40 +20,35 @@ nodeCount=int(0)
 
 # @brief  General Binary tree node class prototype 
 class TBinTree_Node(object):
-	def __init__(self, symbol_prob, bin_zero=None, bin_one=None, node_lvl=None):
-		global gBT_IdNumber
-		self.id=gBT_IdNumber
-		gBT_IdNumber=gBT_IdNumber+1
-		self.prob = symbol_prob
-		self.lvl = node_lvl
-		self.b_one = bin_one
-		self.b_zero = bin_zero
-	#def __str__(self):
-	#	return "%.3d=%c : %.3d" % (self.symbol,self.symbol,self.prob)
-
+    def __init__(self, symbol_prob, bin_zero=None, bin_one=None, node_lvl=None):
+	global gBT_IdNumber
+	self.id=gBT_IdNumber
+	gBT_IdNumber=gBT_IdNumber+1
+	self.prob = symbol_prob
+	self.lvl = node_lvl
+	self.b_one = bin_one
+	self.b_zero = bin_zero
 # @brief  Object instance behaviour if "print" is used with it
-
-	def __repr__(self):
-		return ("id:%0.3d : %d (%d)<<" \
-		% (self.id, self.prob,self.lvl) )
+    def __repr__(self):
+	return ("id:%0.3d : %d (%d)<<" % (self.id, self.prob,self.lvl) )
 
 # @brief  BT node method to obtain ID
 # @retval Node's ID
 	 
-	def GetID(self):
-		return self.id
+    def GetID(self):
+	return self.id
 
 # @brief  BT node method to obtain its probability, how many times given symbol (in leaf) 
 # 	    or sum of probabilities of connected and downstream to this one
 # @retval Probability
 	 
-	def GetProb(self):
-		return self.prob
+    def GetProb(self):
+	return self.prob
 
 # @brief  Method used to update node's level field during BT generation
 
-	def UpdateLvl(self, level):
-		self.lvl=level
+    def UpdateLvl(self, level):
+	self.lvl=level
 	#def GetStr(self):
 	#	return ("id:%s : %s" % (self.id, self.prob) )
 
@@ -64,33 +61,26 @@ class TBinTree_Leaf(TBinTree_Node):
 # @param  Symbol probability -> how many times the specific symbol occured in the sourcedata.
 # @param  Node level -> designated during BT generation (None on default).
 	
-	def __init__(self, symbol_val, symbol_prob,  node_lvl=None):
-		global gBT_IdNumber
-		self.id=gBT_IdNumber
-		gBT_IdNumber=gBT_IdNumber+1
-		self.symbol = symbol_val
-		self.prob = symbol_prob
-		self.lvl = node_lvl
-		self.b_zero = None
-		self.b_one = None
-		self.code = None
+    def __init__(self, symbol_val, symbol_prob,  node_lvl=None):
+	global gBT_IdNumber
+	self.id=gBT_IdNumber
+	gBT_IdNumber=gBT_IdNumber+1
+	self.symbol = symbol_val
+	self.prob = symbol_prob
+	self.lvl = node_lvl
+	self.b_zero = None
+	self.b_one = None
+	self.code = None
 
 # @brief  Leaf instance behaviour if "print" is used with it
 	
-	def __repr__(self):
-		if (self.lvl ==None):
-			return "\t%.3d=%c id:%0.3d : %.3d\r\n" % (self.symbol, self.symbol,\
-			self.id,self.prob)
-		else :
-			return "\t%.3d=%c id:%0.3d : %.3d (%d)\r\n" % (self.symbol,self.symbol,\
-			self.id,self.prob, self.lvl)
-	#def GetStr(self):
-	#	if (self.lvl ==None):
-	#		return "\t%.3d=%c id:%0.3d : %.3d\r\n" % (self.symbol, self.symbol,\
-	#		self.id,self.prob)
-	#	else :
-	#		return "\t%.3d=%c id:%0.3d : %.3d (%d)\r\n" % (self.symbol,self.symbol,\
-	#		self.id,self.prob, self.lvl)
+    def __repr__(self):
+	if (self.lvl ==None):
+		return "\t%.3d=%c id:%0.3d : %.3d\r\n" % (self.symbol, self.symbol,\
+		self.id,self.prob)
+	else :
+		return "\t%.3d=%c id:%0.3d : %.3d (%d)\r\n" % (self.symbol,self.symbol,\
+		self.id,self.prob, self.lvl)
 
 
 # @brief  Binary tree leaf constructor specific class prototype contains symbol_val field and does 
@@ -103,113 +93,149 @@ class TBinTree_Leaf(TBinTree_Node):
 class TBinTree_NodeGenerator:
   # @brief  
   # @param  Symbol value -> character which is represented by this node
-	def __init__(self, filedata): 	#constructor which accepts string as arg and uses it to generate
-					#dictionary to store input source data (arg -> filedata string 
-		self.S_LOW_VALUE=32 #space
-		self.S_HIGH_VALUE=125 # }- character
-		self.pPopulation = 0 #total character count
-		#create empty list as property pBTLeafList -> for fresh data
-		self.pBTLeafList = list()	
-		#create empty list as property pSymbolsList_sorted -> for sorted fresh data
-		self.pSymbolsList_sorted = list()
-		#create empty dictionary as property pSymbolsDict	
-		self.pSymbolsDict = dict()
-		#fill list with symbol data (character with their probability)		
-		for ascii_code in range(self.S_LOW_VALUE, self.S_HIGH_VALUE+1): # for every ASCII code from LOW_VALUE to HIGH_VALUE 
-			x = filedata.count(chr(ascii_code))			# count number of characters in string 
-			if (x>0) :						# if character appears in string at least once
-				self.pSymbolsDict.update({ascii_code:x})	# put it into dictionary with ASCII code as key and no. of appearences as value
-				self.pPopulation +=x				# all counted symbols are added to total source data population
-		self.pListString = str()
+    def __init__(self, filedata): 	#constructor which accepts string as arg and uses it to generate dictionary to store input source data (arg -> filedata string 
+	self.S_LOW_VALUE=32 #space
+	self.S_HIGH_VALUE=125 # }- character
+	self.pPopulation = 0 #total character count
+	#create empty list as property pBTLeafList -> for fresh data
+	self.pBTLeafList = list()	
+	#create empty list as property pSymbolsList_sorted -> for sorted fresh data
+	self.pSymbolsList_sorted = list()
+	#create empty dictionary as property pSymbolsDict	
+	self.pSymbolsDict = dict()
+	#fill list with symbol data (character with their probability)		
+	for ascii_code in range(self.S_LOW_VALUE, self.S_HIGH_VALUE+1): # for every ASCII code from LOW_VALUE to HIGH_VALUE 
+		x = filedata.count(chr(ascii_code))			# count number of characters in string 
+		if (x>0) :						# if character appears in string at least once
+			self.pSymbolsDict.update({ascii_code:x})	# put it into dictionary with ASCII code as key and no. of appearences as value
+			self.pPopulation +=x				# all counted symbols are added to total source data population
+	self.pListString = str()
 
-	def SortData(self): # creates list by sorting symbols along probability
-		for key, value in sorted(self.pSymbolsDict.iteritems(), key=lambda (k,v): (v,k),reverse=False):
-		    	self.pSymbolsList_sorted.append((key,value))
 
-	def SortedLeafGen(self):
-		for leaf_no in range(0, len(self.pSymbolsList_sorted)):
-			self.pBTLeafList.append(TBinTree_Leaf(self.pSymbolsList_sorted[leaf_no][0],self.pSymbolsList_sorted[leaf_no][1]))
-			
-	def DictPrint(self):
-		print ("\r\nIn total = %d" % self.pPopulation)
-		for key in range(self.S_LOW_VALUE, self.S_HIGH_VALUE+1):
-			if (self.pSymbolsDict.has_key(key)):
-				print "%.3d='%c' -> %.2d (%.2f)" % (key, key, self.pSymbolsDict[key], \
-				float(self.pSymbolsDict[key])/self.pPopulation )
+    def SortData(self): # creates list by sorting symbols along probability
+	for key, value in sorted(self.pSymbolsDict.iteritems(), key=lambda (k,v): (v,k),reverse=False):
+	    	self.pSymbolsList_sorted.append((key,value))
 
-	def ListPrint(self):
-		print ("\r\nIn total = %d" % self.pPopulation)
-		for i in range(0,len(self.pSymbolsList_sorted)):
-			print("%.3d=%c : %.3d" % (self.pSymbolsList_sorted[i][0],self.pSymbolsList_sorted[i][0], \
-				self.pSymbolsList_sorted[i][1]))
-			self.pListString = self.pListString + ("%.3d='%c' : %.3d\n" % (self.pSymbolsList_sorted[i][0],self.pSymbolsList_sorted[i][0], \
-				self.pSymbolsList_sorted[i][1]))
+    def Pop2Prob(self): # takes total population into consideration and tranlates it into probability
+	for x in range(0,len(self.pSymbolsList_sorted)):
+		tempItem = list(self.pSymbolsList_sorted.pop(x))
+		tempItem[1]=float(tempItem[1])/self.pPopulation
+		print tempItem
+		self.pSymbolsList_sorted.insert(x,tempItem)
+		
+	    	#self.pSymbolsList_sorted[x]=self.pSymbolsList_sorted[x]/self.pPopulation
+	print self.pSymbolsList_sorted
+
+    def SortedLeafGen(self):
+	for leaf_no in range(0, len(self.pSymbolsList_sorted)):
+		self.pBTLeafList.append(TBinTree_Leaf(self.pSymbolsList_sorted[leaf_no][0],self.pSymbolsList_sorted[leaf_no][1]))
 	
-	def GetPopulation(self):
-		return self.pPopulation
-	def GetSortedList(self):
-		return self.pSymbolsList_sorted
-	def GetNodeList(self):
-		return self.pBTLeafList
+    def DictPrint(self):
+	print ("\r\nIn total = %d" % self.pPopulation)
+	for key in range(self.S_LOW_VALUE, self.S_HIGH_VALUE+1):
+		if (self.pSymbolsDict.has_key(key)):
+			print "%.3d='%c' -> %.3f " % (key, key, self.pSymbolsDict[key], \
+			float(self.pSymbolsDict[key])/self.pPopulation )
+
+    def ListPrint(self):
+	print ("\r\nIn total = %d" % self.pPopulation)
+	for i in range(0,len(self.pSymbolsList_sorted)):
+		print("%.3d=%c : %.3f" % (self.pSymbolsList_sorted[i][0],self.pSymbolsList_sorted[i][0], \
+			self.pSymbolsList_sorted[i][1]))
+		self.pListString = self.pListString + ("%.3d='%c' : %.3f\n" % (self.pSymbolsList_sorted[i][0],self.pSymbolsList_sorted[i][0], \
+			self.pSymbolsList_sorted[i][1]))
+
+    def GetPopulation(self):
+	return self.pPopulation
+    def GetSortedList(self):
+	return self.pSymbolsList_sorted
+    def GetNodeList(self):
+	return self.pBTLeafList
+    def	GetSourceEntropy(self):
+	Entropy = 0
+	temp = 0
+	for x in range(0,len(self.pSymbolsList_sorted)):
+		temp = self.pSymbolsList_sorted[x][1]
+		Entropy+= temp*np.log2(1.0/temp)
+		print temp
+		print "\t%f" % (Entropy)
+	print "source entropy"
+	return Entropy
 
 class TBinTree_Tree:
-	def __init__(self, Leaves):
-		self.pPopulation = Leaves.GetPopulation()
-		self.LeavesList = Leaves.GetNodeList()
-		self.All_leaves = list()
-		self.All_edges = list()
-		self.CodeList = dict()
-	def __call__(self):
-		# old self.root = fBinaryTreeBuilder(self.LeavesList,self.pPopulation, 0)
+    def __init__(self, Leaves):
+	self.pPopulation = Leaves.GetPopulation()
+	self.LeavesList = Leaves.GetNodeList()
+	self.All_leaves = list()
+	self.All_edges = list()
+	self.CodeList = dict()
+    def __call__(self,option=None): #by default top-down method of defininf binary tree, if parameters is present- bottom-up
+	if (option==None):
 		self.root = fBinaryTreeBuilder(self.LeavesList, 0)
-	def ShowBT(self):
-		fBinaryTreeNodeFinder(self.root)
-	def GraphGen(self):
-		#global graphen
-		print "Starting graph generating..."
-		fBinaryTreeNodeCartograph(self.root)
-		BTGraph.write_png('BT_graph.png')
-		print "Graph complete."
-	def CodingListGenerator(self):
-		global gCodingDict		
-		print "Generating symbol coding list..."
-		fBinaryTreeNodeFinder(self.root,Action=1)
-	# print dictionary with symbol coding
-		dictKeys = gCodingDict.keys()
-		for x in range(0,len(gCodingDict)):
-			print  "%02d)\'%c\' -> %s"% (x,dictKeys[x],gCodingDict[dictKeys[x]])
-	def CodeMessage(self,MessageContent, Action=None):
-		#TODO exception handling, what to do about unspecified symbol (not present in source)
-		
-		#codedMsg = "|"
-		if (Action==None):
-			codedMsg = ""
-			print len(MessageContent)
-			for x in range(0,len(MessageContent)): #TODO try KeyError -> dictionary unspecified key handling
-				codedMsg = codedMsg + gCodingDict[ord(MessageContent[x])] + "|"
-			return codedMsg
-		elif (Action==1):
-			codedMsg = list()
-			for x in range(0,len(MessageContent)):
-				codedMsg.append(gCodingDict[ord(MessageContent[x])])
-			return codedMsg
+	else :
+		print "other way"
+    def ShowBT(self):
+	fBinaryTreeNodeFinder(self.root)
+    def GraphGen(self):
+	#global graphen
+	print "Starting graph generating..."
+	fBinaryTreeNodeCartograph(self.root)
+	BTGraph.write_png('BT_graph.png')
+	print "Graph complete."
+    def CodingListGenerator(self):
+	global gCodingDict		
+	print "Generating symbol coding list..."
+	fBinaryTreeNodeFinder(self.root,Action=1)
+# print dictionary with symbol coding
+	dictKeys = gCodingDict.keys()
+	for x in range(0,len(gCodingDict)):
+		print  "%02d)\'%c\' -> %s"% (x,dictKeys[x],gCodingDict[dictKeys[x]])
+    def CodeMessage(self,MessageContent, Action=None):
+	global gCodingDict
+	if (Action==None):
+		codedMsg = ""
+		print len(MessageContent)
+		for x in range(0,len(MessageContent)): #TODO try KeyError -> dictionary unspecified key handling - done
+			if (gCodingDict.has_key(ord(MessageContent[x]))==False):
+				return None
+			codedMsg = codedMsg + gCodingDict[ord(MessageContent[x])] + "|"
+		return codedMsg
+	elif (Action==1):
+		codedMsg = list()
+		for x in range(0,len(MessageContent)):
+			if (gCodingDict.has_key(ord(MessageContent[x]))==False):
+				return None
+			codedMsg.append(gCodingDict[ord(MessageContent[x])])
+		return codedMsg
+    def	GetSourceCodEff(self):
+	global gCodingDict
+	print "source coding efficiency"
+	CodEff = float(0)
+	temp = int(0)
+	for key,value in gCodingDict.iteritems():
+		CodEff +=len(value);
+		temp += 1
+	CodEff/=temp
+	print CodEff
+	return CodEff
+	
 
-	def DecodeMessage(self,MessageContent):
-		global gTempCodedMsg
-		gTempCodedMsg = MessageContent[:] #copy coded message string into global variable string for further manipulations
-		tempString = ""
-		while (len(gTempCodedMsg)): #while there are bits of the coded message available run decoding of consecutive symbols in loop 		
-			symbol = fDecodeBit(self.root, gTempCodedMsg)
-			tempString= tempString + chr(symbol) # concatanate character symbol to string			
-			#print "%c" %(symb)
-		return tempString
-		#codedMsg = ""
-		#codedMsg = "|"
-		#print len(MessageContent)
-		#for x in range(0,len(MessageContent)):
-		#	codedMsg = codedMsg + gCodingDict[ord(MessageContent[x])] + "|"
-		#return codedMsg
-		print
+def DecodeMessage(self,MessageContent):
+	global gTempCodedMsg
+	gTempCodedMsg = MessageContent[:] #copy coded message string into global variable string for further manipulations
+	tempString = ""
+	while (len(gTempCodedMsg)): #while there are bits of the coded message available run decoding of consecutive symbols in loop 		
+		symbol = fDecodeBit(self.root, gTempCodedMsg)
+		tempString= tempString + chr(symbol) # concatanate character symbol to string			
+		#print "%c" %(symb)
+	return tempString
+	#codedMsg = ""
+	#codedMsg = "|"
+	#print len(MessageContent)
+	#for x in range(0,len(MessageContent)):
+	#	codedMsg = codedMsg + gCodingDict[ord(MessageContent[x])] + "|"
+	#return codedMsg
+	print
 
 global gTempCodedMsg
 gTempCodedMsg = str()
@@ -243,7 +269,7 @@ def fBinaryTreeBuilder(LeavesList,Level) : # top-down method
 	for i in LeavesList[:] :
 		Population+=i.prob
 	print("\tcounted pop=%d,nodes=%d\n" % (Population, leaves_in_list))
-	if ( leaves_in_list <= 3 ) :
+	if ( leaves_in_list <= 2 ) :
 		if (leaves_in_list == 0) : 
 			print "ERROR!->leaf node empty"
 			return None		
@@ -275,12 +301,12 @@ def fBinaryTreeBuilder(LeavesList,Level) : # top-down method
 			return TBinTree_Node( Population, BinaryNodeZero, LeavesList[2], Level)
 			#print LeavesList[index+1:leaves_in_list]
 	else :
-		tempPopulation = Population
+		tempPopulation = float(1)#Population
 		index = 0
 		prob_sum = 0
 		while ( 1 ) :
 			prob_sum = prob_sum + LeavesList[index].prob
-			if ( (prob_sum<(tempPopulation/2)+1) and (index<(leaves_in_list)-1) ) : 
+			if ( (prob_sum<0.501) and (index<(leaves_in_list)-1) ) : 
 		# TODO update this statement to be more precise in case of list splitting along similiar prob
 				#print prob_sum
 				index = index + 1
@@ -293,13 +319,18 @@ def fBinaryTreeBuilder(LeavesList,Level) : # top-down method
 		BinaryNodeZero = fBinaryTreeBuilder(LeavesList[:index], Level+1)
 		print "one"
 		BinaryNodeOne = fBinaryTreeBuilder(LeavesList[index:], Level+1)
-		return TBinTree_Node( Population, BinaryNodeZero, BinaryNodeOne, Level) 
+		return TBinTree_Node( Population, BinaryNodeZero, BinaryNodeOne, Level)
+def fBinaryTreeBuilderTD(LeavesList,Level) : # bottom-up method
+	print "top-down mode"
+
+
 ###################################################################################################################################
 
 global gCodingDict
 gCodingDict = dict()
 
 def fBinaryTreeNodeFinder(CurrentNode, Action = None, Code = ""):#, gCodingDict= None):
+	global gCodingDict
 	if (Action == None):
 		print CurrentNode
 		if (CurrentNode.__class__.__name__ == 'TBinTree_Node'):
@@ -313,12 +344,8 @@ def fBinaryTreeNodeFinder(CurrentNode, Action = None, Code = ""):#, gCodingDict=
 			fBinaryTreeNodeFinder(CurrentNode.b_zero, Action,Code = (tempText+'0')) 
 			fBinaryTreeNodeFinder(CurrentNode.b_one, Action,Code = (tempText+'1')) 
 		elif (CurrentNode.__class__.__name__ == 'TBinTree_Leaf'):
-			#fBinaryTreeNodeFinder(CurrentNode.b_zero, Action,Code.join('0')
-			#fBinaryTreeNodeFinder(CurrentNode.b_one, Action,Code.join('1')
-		
-			#print "\'%c\':%s(%d)" % (CurrentNode.symbol, Code, CurrentNode.lvl) #, Code.join('0'))
 			gCodingDict[CurrentNode.symbol]=Code
-			#print "" (CurrentNode.symbol) #, Code.join('1'))
+
 
 
 def fBinaryTreeNodeCartograph(thisNode, Action = None):
@@ -347,7 +374,7 @@ def fBinaryTreeNodeCartograph(thisNode, Action = None):
 		return node_parent 
 
 def makeNode(thisNode):
-	tempStr="{%d|<f2>id=%d(%d)}" % (thisNode.b_zero.prob+thisNode.b_one.prob, thisNode.id,thisNode.lvl)
+	tempStr="{%.3f|<f2>id=%d(%d)}" % (thisNode.b_zero.prob+thisNode.b_one.prob, thisNode.id,thisNode.lvl)
 	node_temp = pydot.Node(label=tempStr,shape="record",style="filled", fillcolor="brown")
 	node_temp.set_name(str(thisNode.id))
 	#print node_temp.to_string()
@@ -355,7 +382,7 @@ def makeNode(thisNode):
 	
 
 def makeLeaf(thisNode):
-	tempStr = "<f1>\'%c\'|{%d|id=%d(%d)}" % (thisNode.symbol, thisNode.prob, thisNode.id,thisNode.lvl)
+	tempStr = "<f1>\'%c\'|{%.3f|id=%d(%d)}" % (thisNode.symbol, thisNode.prob, thisNode.id,thisNode.lvl)
 	node_temp = pydot.Node(label=tempStr,shape="record",style="filled", fillcolor="green")
 	node_temp.set_name(str(thisNode.id))
 	#print node_temp.to_string()
@@ -372,12 +399,12 @@ def clearGlobaVariables():
 	global nodeCount
 	global gBT_IdNumber 
 	global gTempCodedMsg  
-	#global gCodingDict
+	global gCodingDict
 	BTGraph = pydot.Dot(graph_type='digraph')
 	nodeCount=int(0)
 	gBT_IdNumber=0
 	gTempCodedMsg = ""
-	#gCodingDict = dict()
+	gCodingDict = dict()
 
 
 def main():

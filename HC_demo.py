@@ -54,43 +54,43 @@ class ImageWidget(QtGui.QLabel):
 class Ui_MainWindow(object):
     def __init__(self):
         super(Ui_MainWindow, self).__init__()
-	self.filename1_src = str()
-	self.filename2_msg = str()
+	self.filename1_Src = str()
+	self.filename2_Msg = str()
+	self.Generator = None
 
     def setupUi(self, MainWindow):
 	MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(800, 640)
+        MainWindow.resize(1000, 840)
 
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
 
-        self.frame = QtGui.QFrame(self.centralwidget)
-        self.frame.setGeometry(QtCore.QRect(9, 9, 220, 530))
-        self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
-        self.frame.setFrameShadow(QtGui.QFrame.Raised)
-        self.frame.setObjectName(_fromUtf8("frame"))
+	
+        self.leftFrame = QtGui.QFrame(self.centralwidget)
+        self.leftFrame.setGeometry(QtCore.QRect(10, 10, 260, 740))
+        self.leftFrame.setFrameShape(QtGui.QFrame.StyledPanel)
+        self.leftFrame.setFrameShadow(QtGui.QFrame.Raised)
+        self.leftFrame.setObjectName(_fromUtf8("frame"))
+	
+	self.innerLeftWidget = QtGui.QWidget(self.leftFrame)
+	self.innerLeftWidget.setGeometry(QtCore.QRect(10, 10, 260, 720))
 
 ################################################################################
-#	TOOLBOX OBJECT
-#	
-#
-##########
-        self.toolBox = QtGui.QToolBox(self.frame)
-        self.toolBox.setGeometry(QtCore.QRect(10, 10, 190, 500))
-        self.toolBox.setFrameShape(QtGui.QFrame.NoFrame)
-        self.toolBox.setObjectName(_fromUtf8("toolBox"))
+###### Toolbox page 1
+################################################################################
 
-################################################################################
-###### Tolbox page 1
-################################################################################
-        self.page = QtGui.QWidget()
-        self.page.setGeometry(QtCore.QRect(0, 0, 190, 330))
+        self.page = QtGui.QWidget(self.innerLeftWidget)
+        self.page.setGeometry(QtCore.QRect(10, 10, 190, 430))
         self.page.setObjectName(_fromUtf8("page"))
 
-        self.textEdit1_src = SourceTextEdit(self.page)
-        self.textEdit1_src.setGeometry(QtCore.QRect(0, 30, 190, 140))
-        self.textEdit1_src.setObjectName(_fromUtf8("textEdit"))
-	self.textEdit1_src.connect(self.textEdit1_src,QtCore.SIGNAL("textChanged()"),self.textEdit1_src,QtCore.SLOT("slotTextChanged()"))
+        self.label = QtGui.QLabel(self.page)
+        self.label.setGeometry(QtCore.QRect(0, 0, 180, 20))
+        self.label.setObjectName(_fromUtf8("label"))
+
+        self.textEdit1_Src = SourceTextEdit(self.page)
+        self.textEdit1_Src.setGeometry(QtCore.QRect(0, 30, 190, 140))
+        self.textEdit1_Src.setObjectName(_fromUtf8("textEdit"))
+	self.textEdit1_Src.connect(self.textEdit1_Src,QtCore.SIGNAL("textChanged()"),self.textEdit1_Src,QtCore.SLOT("slotTextChanged()"))
 
         self.pushButton = QtGui.QPushButton(self.page)
         self.pushButton.setGeometry(QtCore.QRect(0, 180, 190, 40))
@@ -99,19 +99,64 @@ class Ui_MainWindow(object):
         self.comboBox = QtGui.QComboBox(self.page)
         self.comboBox.setGeometry(QtCore.QRect(0, 230, 190, 30))
         self.comboBox.setObjectName(_fromUtf8("comboBox"))
-        self.comboBox.addItem(_fromUtf8(""))
+        self.comboBox.addItem(_fromUtf8("Bottom-up method"))
+	self.comboBox.addItem(_fromUtf8("Top-down method"))
 
-        self.label = QtGui.QLabel(self.page)
-        self.label.setGeometry(QtCore.QRect(0, 0, 180, 20))
-        self.label.setObjectName(_fromUtf8("label"))
+	self.pushButton_3 = QtGui.QPushButton(self.page)
+        self.pushButton_3.setGeometry(QtCore.QRect(0, 270, 190, 40))
+        self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
 
-        self.toolBox.addItem(self.page, _fromUtf8(""))
+        self.label_8 = QtGui.QLabel(self.page)
+        self.label_8.setGeometry(QtCore.QRect(0, 320, 90, 20))
+        self.label_8.setObjectName(_fromUtf8("label_8"))
+
+	self.lcdNumber = QtGui.QLCDNumber(self.page)
+        self.lcdNumber.setGeometry(QtCore.QRect(0, 340, 90, 20))
+        self.lcdNumber.setFrameShape(QtGui.QFrame.Box)
+        self.lcdNumber.setFrameShadow(QtGui.QFrame.Plain)
+        self.lcdNumber.setLineWidth(2)
+        self.lcdNumber.setSmallDecimalPoint(False)
+        self.lcdNumber.setMode(QtGui.QLCDNumber.Dec)
+        self.lcdNumber.setSegmentStyle(QtGui.QLCDNumber.Flat)
+        self.lcdNumber.setProperty("value", 0.001)
+        self.lcdNumber.setProperty("intValue", 0)
+        self.lcdNumber.setObjectName(_fromUtf8("lcdNumber"))
+
+	self.label_9 = QtGui.QLabel(self.page)
+        self.label_9.setGeometry(QtCore.QRect(100, 320, 90, 20))
+        self.label_9.setObjectName(_fromUtf8("label_9"))
+
+	self.lcdNumber_2 = QtGui.QLCDNumber(self.page)
+        self.lcdNumber_2.setGeometry(QtCore.QRect(100, 340, 90, 20))
+        self.lcdNumber_2.setFrameShape(QtGui.QFrame.Box)
+        self.lcdNumber_2.setFrameShadow(QtGui.QFrame.Plain)
+        self.lcdNumber_2.setLineWidth(2)
+        self.lcdNumber_2.setSmallDecimalPoint(False)
+        self.lcdNumber_2.setMode(QtGui.QLCDNumber.Dec)
+        self.lcdNumber_2.setSegmentStyle(QtGui.QLCDNumber.Flat)
+        self.lcdNumber_2.setProperty("value", 0.001)
+        self.lcdNumber_2.setProperty("intValue", 0)
+        self.lcdNumber_2.setObjectName(_fromUtf8("lcdNumber_2"))
+
+	self.label_10 = QtGui.QLabel(self.page)
+        self.label_10.setGeometry(QtCore.QRect(100, 320, 90, 20))
+        self.label_10.setObjectName(_fromUtf8("label_10"))
+
+        self.line = QtGui.QFrame(self.page)
+        self.line.setGeometry(QtCore.QRect(0, 390, 190, 20))
+	self.line.setLineWidth(2)
+        self.line.setFrameShape(QtGui.QFrame.HLine)
+        self.line.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line.setObjectName(_fromUtf8("line"))
+
+	
 
 ################################################################################
-###### Tolbox page 2
+###### Toolbox page 2
 ################################################################################
-        self.page_2 = QtGui.QWidget()
-        self.page_2.setGeometry(QtCore.QRect(0, 0, 190, 330))
+
+        self.page_2 = QtGui.QWidget(self.innerLeftWidget)
+        self.page_2.setGeometry(QtCore.QRect(10, 420, 190, 330))
         self.page_2.setObjectName(_fromUtf8("page_2"))
         
 	self.label_4 = QtGui.QLabel(self.page_2)
@@ -122,46 +167,36 @@ class Ui_MainWindow(object):
         self.pushButton_2.setGeometry(QtCore.QRect(0, 180, 190, 40))
         self.pushButton_2.setObjectName(_fromUtf8("pushButton"))
 
-	self.textEdit3_msg = MessageTextEdit(self.page_2)
-        self.textEdit3_msg.setGeometry(QtCore.QRect(0, 30, 190, 140))
-        self.textEdit3_msg.setObjectName(_fromUtf8("textEdit_3"))
- 	self.textEdit3_msg.connect(self.textEdit3_msg,QtCore.SIGNAL("textChanged()"),self.textEdit3_msg,QtCore.SLOT("slotTextChanged()"))
+	self.textEdit3_Msg = MessageTextEdit(self.page_2)
+        self.textEdit3_Msg.setGeometry(QtCore.QRect(0, 30, 190, 140))
+        self.textEdit3_Msg.setObjectName(_fromUtf8("textEdit_3"))
+ 	self.textEdit3_Msg.connect(self.textEdit3_Msg,QtCore.SIGNAL("textChanged()"),self.textEdit3_Msg,QtCore.SLOT("slotTextChanged()"))
+	
+	self.label_7 = QtGui.QLabel(self.page_2)
+        self.label_7.setGeometry(QtCore.QRect(25, 230, 180, 20))
+        self.label_7.setObjectName(_fromUtf8("label_7"))
 
-	self.toolBox.addItem(self.page_2, _fromUtf8(""))
+	self.checkbox = QtGui.QCheckBox(self.page_2)
+	self.checkbox.setGeometry(QtCore.QRect(0, 230, 21, 21))
+	self.checkbox.setObjectName(_fromUtf8("checkbox"))
 
-################################################################################
-###### Tolbox page 3
-################################################################################
-        self.page_3 = QtGui.QWidget()
-        self.page_3.setObjectName(_fromUtf8("page_3"))
-        self.toolBox.addItem(self.page_3, _fromUtf8(""))
+	#self.toolBox.addItem(self.page_2, _fromUtf8(""))
 
-################################################################################
-###### Tolbox page 4
-################################################################################
-        self.page_4 = QtGui.QWidget()
-        self.page_4.setObjectName(_fromUtf8("page_4"))
-        self.toolBox.addItem(self.page_4, _fromUtf8(""))
-
-################################################################################
-###### Tolbox page 1
-################################################################################
-        self.page_5 = QtGui.QWidget()
-        self.page_5.setObjectName(_fromUtf8("page_5"))
-        self.toolBox.addItem(self.page_5, _fromUtf8(""))
 
 ################################################################################
 #	TAB OBJECT
 #	
 #
 ##########
+
         self.tabWidget = QtGui.QTabWidget(self.centralwidget)
-        self.tabWidget.setGeometry(QtCore.QRect(240, 10, 550, 530))
+        self.tabWidget.setGeometry(QtCore.QRect(280, 10, 650, 740))
         self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
 
 ################################################################################
 ###### TAB page 1
 ################################################################################
+
         self.tab = QtGui.QWidget()
         self.tab.setObjectName(_fromUtf8("tab"))
         self.tabWidget.addTab(self.tab, _fromUtf8(""))
@@ -174,19 +209,19 @@ class Ui_MainWindow(object):
         self.label_3.setGeometry(QtCore.QRect(4, 26, 180, 20))
         self.label_3.setObjectName(_fromUtf8("label_3"))
 
-        self.textEdit2_srclist = QtGui.QTextEdit(self.tab)
-        self.textEdit2_srclist.setGeometry(QtCore.QRect(4, 52, 170, 430))
-        self.textEdit2_srclist.setObjectName(_fromUtf8("textEdit_2"))
-	self.textEdit2_srclist.setReadOnly(True)
+        self.textEdit2_Srclist = QtGui.QTextEdit(self.tab)
+        self.textEdit2_Srclist.setGeometry(QtCore.QRect(4, 52, 170, 430))
+        self.textEdit2_Srclist.setObjectName(_fromUtf8("textEdit_2"))
+	self.textEdit2_Srclist.setReadOnly(True)
 
 	self.label_5 = QtGui.QLabel(self.tab)
         self.label_5.setGeometry(QtCore.QRect(182, 26, 180, 20))
         self.label_5.setObjectName(_fromUtf8("label_5"))
 
-      	self.textEdit4_msgcoded = QtGui.QTextEdit(self.tab)
-        self.textEdit4_msgcoded.setGeometry(QtCore.QRect(182, 52, 350, 200))
-        self.textEdit4_msgcoded.setObjectName(_fromUtf8("textEdit_4"))
-	self.textEdit4_msgcoded.setReadOnly(True)
+      	self.textEdit4_Msgcoded = QtGui.QTextEdit(self.tab)
+        self.textEdit4_Msgcoded.setGeometry(QtCore.QRect(182, 52, 350, 200))
+        self.textEdit4_Msgcoded.setObjectName(_fromUtf8("textEdit_4"))
+	self.textEdit4_Msgcoded.setReadOnly(True)
 
 	self.label_6 = QtGui.QLabel(self.tab)
         self.label_6.setGeometry(QtCore.QRect(182, 266, 180, 20))
@@ -196,7 +231,7 @@ class Ui_MainWindow(object):
         self.textEdit5_decoded.setGeometry(QtCore.QRect(182, 302, 350, 180))
         self.textEdit5_decoded.setObjectName(_fromUtf8("textEdit_5"))
 	self.textEdit5_decoded.setReadOnly(True)
-	#self.textEdit2_srclist.connect(self.textEdit1_src,QtCore.SIGNAL("textChanged()"),self.textEdit1_src,QtCore.SLOT("slotTextChanged()"))
+	#self.textEdit2_Srclist.connect(self.textEdit1_Src,QtCore.SIGNAL("textChanged()"),self.textEdit1_Src,QtCore.SLOT("slotTextChanged()"))
 
 ################################################################################
 ###### TAB page 2
@@ -205,21 +240,14 @@ class Ui_MainWindow(object):
         self.tab_2.setObjectName(_fromUtf8("tab_2"))
         self.tabWidget.addTab(self.tab_2, _fromUtf8(""))
 
-	self.picture = QtGui.QPixmap("example1_graph.png")
-
-        #self.imageLabel.setBackgroundRole(QtGui.QPalette.Base)
-        #self.imageLabel.setSizePolicy(QtGui.QSizePolicy.Ignored,
-        #        QtGui.QSizePolicy.Ignored)
-
-
+	self.picture = QtGui.QPixmap("")
 	self.scrollArea = QtGui.QScrollArea(self.tab_2)
         self.scrollArea.setBackgroundRole(QtGui.QPalette.Dark)
-	self.scrollArea.setGeometry(QtCore.QRect(10, 10, 520, 470))
+	self.scrollArea.setGeometry(QtCore.QRect(10, 10, 620, 670))
 
 	self.graphicsView = ImageWidget(self.scrollArea)
         self.graphicsView.setBackgroundRole(QtGui.QPalette.Base)
 	self.graphicsView.setPixmap(self.picture)
-#	self.graphicsView.connect(self.graphicsView,QtCore.SIGNAL("pressed()"),self.graphicsView, QtCore.SLOT("resizeImage()"))
 
         self.scrollArea.setWidget(self.graphicsView)
 	self.graphicsView.setObjectName(_fromUtf8("graphicsView"))
@@ -228,123 +256,149 @@ class Ui_MainWindow(object):
 
 ################################################################################
 #	MENUBAR OBJECT
-#	
 #
-##########
+################################################################################
+
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 30))
         self.menubar.setObjectName(_fromUtf8("menubar"))
-
-################################################################################
-###### MENU1 OBJECT
-################################################################################
-        self.menuMenu = QtGui.QMenu(self.menubar)
-        self.menuMenu.setObjectName(_fromUtf8("menuMenu"))
-	MainWindow.setMenuBar(self.menubar)
 
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
 
-        #self.actionLoad_source = QtGui.QAction(MainWindow)
-        #self.actionLoad_source.setObjectName(_fromUtf8("actionLoad_source"))
-        #self.menuMenu.addAction(self.actionLoad_source)
+################################################################################
+###### MENU1 OBJECT - Source
+################################################################################
+
+        self.menuMenu1_Src = QtGui.QMenu(self.menubar)
+        self.menuMenu1_Src.setObjectName(_fromUtf8("menuMenu1_Src"))
+
+        self.newAction_Src = QtGui.QAction('New', MainWindow)
+        self.newAction_Src.setShortcut('Ctrl+N')
+        self.newAction_Src.setStatusTip('Create new source')
+        self.newAction_Src.triggered.connect(self.newFile1_Src)
         
-###
-        self.newAction = QtGui.QAction('New', MainWindow)
-        self.newAction.setShortcut('Ctrl+N')
-        self.newAction.setStatusTip('Create new file')
-        self.newAction.triggered.connect(self.newFile)
-        
-        self.saveAction = QtGui.QAction('Save', MainWindow)
-        self.saveAction.setShortcut('Ctrl+S')
-        self.saveAction.setStatusTip('Save current file')
-        self.saveAction.triggered.connect(self.saveFile)
-	self.saveAction.setDisabled(True)
+        self.saveAction_Src = QtGui.QAction('Save', MainWindow)
+        self.saveAction_Src.setShortcut('Ctrl+S')
+        self.saveAction_Src.setStatusTip('Save current source in file')
+        self.saveAction_Src.triggered.connect(self.saveFile1_Src)
+	self.saveAction_Src.setDisabled(True)
 	
-	self.saveAsAction = QtGui.QAction('Save as...', MainWindow)
-        self.saveAsAction.setShortcut('Ctrl+W')
-        self.saveAsAction.setStatusTip('Save current as file')
-        self.saveAsAction.triggered.connect(self.saveAsFile)
+	self.saveAsAction_Src = QtGui.QAction('Save as...', MainWindow)
+        self.saveAsAction_Src.setShortcut('Ctrl+W')
+        self.saveAsAction_Src.setStatusTip('Save source as file')
+        self.saveAsAction_Src.triggered.connect(self.saveAsFile1_Src)
         
-        self.openAction = QtGui.QAction('Open...', MainWindow)
-        self.openAction.setShortcut('Ctrl+O')
-        self.openAction.setStatusTip('Open a file')
-        self.openAction.triggered.connect(self.openFile)
+        self.openAction_Src = QtGui.QAction('Open...', MainWindow)
+        self.openAction_Src.setShortcut('Ctrl+O')
+        self.openAction_Src.setStatusTip('Load source from file')
+        self.openAction_Src.triggered.connect(self.openFile1_Src)
         
-        self.closeAction = QtGui.QAction('Close', MainWindow)
-        self.closeAction.setShortcut('Ctrl+Q')
-        self.closeAction.setStatusTip('Close Demo App')
-        self.closeAction.triggered.connect(MainWindow.close)
+        self.closeAction_Src = QtGui.QAction('Close', MainWindow)
+        self.closeAction_Src.setShortcut('Ctrl+Q')
+        self.closeAction_Src.setStatusTip('Close Demo App')
+        self.closeAction_Src.triggered.connect(MainWindow.close)
 
-	self.testAction = QtGui.QAction('Test', MainWindow)
-        self.testAction.triggered.connect(self.test)
+	self.testAction_Src = QtGui.QAction('Test', MainWindow)
+        self.testAction_Src.triggered.connect(self.test)
 
-        #self.menubar = self.menuBar()
-        #self.fileMenu = menubar.addMenu('&File')
-        self.menuMenu.addAction(self.newAction)
-        self.menuMenu.addAction(self.saveAction)
-	self.menuMenu.addAction(self.saveAsAction)
-        self.menuMenu.addAction(self.openAction)
-        self.menuMenu.addAction(self.closeAction)
-	self.menuMenu.addAction(self.testAction)
+        self.menuMenu1_Src.addAction(self.newAction_Src)
+        self.menuMenu1_Src.addAction(self.saveAction_Src)
+	self.menuMenu1_Src.addAction(self.saveAsAction_Src)
+        self.menuMenu1_Src.addAction(self.openAction_Src)
+        self.menuMenu1_Src.addAction(self.closeAction_Src)
+	self.menuMenu1_Src.addAction(self.testAction_Src)
 
-	#####
-	self.menubar.addAction(self.menuMenu.menuAction())
+################################################################################
+###### MENU2 OBJECT - Message
+################################################################################
+
+        self.menuMenu2_Msg  = QtGui.QMenu(self.menubar)
+        self.menuMenu2_Msg.setObjectName(_fromUtf8("menuMenu2_Msg"))
+
+        self.newAction_Msg = QtGui.QAction('New', MainWindow)
+        self.newAction_Msg.setShortcut('Ctrl+Alt+N')
+        self.newAction_Msg.setStatusTip('Create new message')
+        self.newAction_Msg.triggered.connect(self.newFile2_Msg)
+        
+        self.saveAction_Msg = QtGui.QAction('Save', MainWindow)
+        self.saveAction_Msg.setShortcut('Ctrl+Alt+S')
+        self.saveAction_Msg.setStatusTip('Save current message in file')
+        self.saveAction_Msg.triggered.connect(self.saveFile2_Msg)
+	self.saveAction_Msg.setDisabled(True)
+	
+	self.saveAsAction_Msg = QtGui.QAction('Save as...', MainWindow)
+        self.saveAsAction_Msg.setShortcut('Ctrl+Alt+W')
+        self.saveAsAction_Msg.setStatusTip('Save current message as file')
+        self.saveAsAction_Msg.triggered.connect(self.saveAsFile2_Msg)
+        
+        self.openAction_Msg = QtGui.QAction('Open...', MainWindow)
+        self.openAction_Msg.setShortcut('Ctrl+Alt+O')
+        self.openAction_Msg.setStatusTip('Load message from file')
+        self.openAction_Msg.triggered.connect(self.openFile2_Msg)
+
+	self.testAction_Msg = QtGui.QAction('Test', MainWindow)
+        self.testAction_Msg.triggered.connect(self.test2)
+
+        self.menuMenu2_Msg.addAction(self.newAction_Msg)
+        self.menuMenu2_Msg.addAction(self.saveAction_Msg)
+	self.menuMenu2_Msg.addAction(self.saveAsAction_Msg)
+        self.menuMenu2_Msg.addAction(self.openAction_Msg)
+	self.menuMenu2_Msg.addAction(self.testAction_Msg)
+
+################################################################################
+
+	self.menubar.addAction(self.menuMenu1_Src.menuAction())
+	self.menubar.addAction(self.menuMenu2_Msg.menuAction())
+	#self.menubar.addAction(self.testAction_Msg)
+
+	MainWindow.setMenuBar(self.menubar)
         self.retranslateUi(MainWindow)
-        self.toolBox.setCurrentIndex(0)
-	QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.generateHCBinTree)
+
+################################################################################
+#	Signal handlers
+################################################################################
+
+	QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.test2)
 	QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL(_fromUtf8("clicked()")), self.codeMessage)
+	QtCore.QObject.connect(self.pushButton_3, QtCore.SIGNAL(_fromUtf8("clicked()")), self.generateHCBinTree)
+
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
 ################# Menu Actions ##################################################################
 
+
 ################################################################################
 #	File Operations
 ################################################################################
-
-    def newFile(self):
-	newFileSelect = dict()
-	#python switch-case quivalent...
-	newFileSelect = { 0 : self.newFile1_Src, \
-		1 : self.newFile2_Msg, \
-		2 : self.newFile2_Msg, \
-		3 : self.newFile2_Msg, \
-		4 : self.newFile2_Msg, \
-		5 : self.newFile2_Msg}  
-	toolboxIndex = self.toolBox.currentIndex()
-	newFileSelect[toolboxIndex]()
+# SRC
+################################################################################
 
     def newFile1_Src(self):
-     	self.textEdit1_src.clear()
-	self.filename1_src = ""
-	self.saveAction.setDisabled(True)
+     	self.textEdit1_Src.clear()
+	self.textEdit1_Src.setFocus()
+	self.filename1_Src = ""
+	self.saveAction_Src.setDisabled(True)
 	print "newFile1"
 
-    def newFile2_Msg(self):
-     	self.textEdit1_src.clear()
-	self.filename1_msg = ""
-	self.saveAction.setDisabled(True)
-        print "newFile2"
 
-    def saveFile(self):
-	activeToolbox = self.toolBox.currentIndex()
+    def saveFile1_Src(self):
 	try:	
-		if(self.filename1_src):		
-			f = open(self.filename1_src, 'w')
+		if(self.filename1_Src):		
+			f = open(self.filename1_Src, 'w')
 	except IOError:
 		print "Exc(0x04): No access to file. Check file permission attributes. Aborting  save..."
 		return
-	filedata = self.textEdit1_src.toPlainText()
+	filedata = self.textEdit1_Src.toPlainText()
 	try:
 		f.write(filedata)	
 	except UnboundLocalError:
 		print "Exc(0x02): File pathway variable not initialized. Aborting file load..."		
 		return 
-	#self.saveAction.setDisabled(False)
 	f.close()
 
-    def saveAsFile(self):
+    def saveAsFile1_Src(self):
 	filename = QtGui.QFileDialog.getSaveFileName(MainWindow, 'Save File', os.getenv('PWD'))
 	try:	
 		#print "\\%s\\ " %(filename)
@@ -353,26 +407,34 @@ class Ui_MainWindow(object):
 	except IOError:
 		print "Exc(0x01): No access to file. Check file permission attributes. Aborting file save..."
 		return
-	filedata = self.textEdit1_src.toPlainText()
+	filedata = self.textEdit1_Src.toPlainText()
 	try:
 		f.write(filedata)	
 	except UnboundLocalError:
 		print "Exc(0x03): File pathway variable not initialized. Aborting file load..."		
 		return
-	self.filename1_src = filename[:]
-	self.saveAction.setDisabled(False)
+	self.filename1_Src = filename[:]
+	self.saveAction_Src.setDisabled(False)
 	f.close()
-        
-        
-    def openFile(self):
-	openFileSelect = { 0 : self.openFile1_Src,\
-		1 : self.openFile2_Msg,\
-		2 : self.openFile1_Src,\
-		3 : self.openFile1_Src,\
-		4 : self.openFile1_Src,\
-		5 : self.openFile1_Src}
-	toolboxIndex = self.toolBox.currentIndex()
-	openFileSelect[toolboxIndex]()
+
+    def saveAsFile1_Src(self):
+	filename = QtGui.QFileDialog.getSaveFileName(MainWindow, 'Save File', os.getenv('PWD'))
+	try:	
+		#print "\\%s\\ " %(filename)
+		if (filename):
+			f = open(filename, 'w')
+	except IOError:
+		print "Exc(0x01): No access to file. Check file permission attributes. Aborting file save..."
+		return
+	filedata = self.textEdit1_Src.toPlainText()
+	try:
+		f.write(filedata)	
+	except UnboundLocalError:
+		print "Exc(0x03): File pathway variable not initialized. Aborting file load..."		
+		return
+	self.filename1_Src = filename[:]
+	self.saveAction_Src.setDisabled(False)
+	f.close()
 
     def openFile1_Src(self):
 	#filename = 'sourcedata.txt'
@@ -389,16 +451,60 @@ class Ui_MainWindow(object):
 	except UnboundLocalError:
 		print "Exc(0x04): File pathway variable not initialized. Aborting file load..."		
 		return 
-	self.filename1_src = filename[:]
-	self.saveAction.setDisabled(False)
-	self.textEdit1_src.setText(filedata)
+	self.filename1_Src = filename[:]
+	self.saveAction_Src.setDisabled(False)
+	self.textEdit1_Src.setText(filedata)
+	self.textEdit1_Src.setFocus()
+	f.close()
+
+################################################################################
+# MSG
+################################################################################
+ 
+    def newFile2_Msg(self):
+     	self.textEdit3_Msg.clear()
+	self.textEdit3_Msg.setFocus()
+	self.filename2_Msg = ""
+	self.saveAction_Msg.setDisabled(True)
+        print "newFile2"
+
+    def saveFile2_Msg(self):
+	try:	
+		if(self.filename2_Msg):		
+			f = open(filename2_Msg, 'w')
+	except IOError:
+		print "Exc(0x04): No access to file. Check file permission attributes. Aborting  save..."
+		return
+	filedata = self.textEdit3_Msg.toPlainText()
+	try:
+		f.write(filedata)	
+	except UnboundLocalError:
+		print "Exc(0x02): File pathway variable not initialized. Aborting file load..."		
+		return 
+	f.close()
+
+    def saveAsFile2_Msg(self):
+	filename = QtGui.QFileDialog.getSaveFileName(MainWindow, 'Save File', os.getenv('PWD'))
+	try:	
+		#print "\\%s\\ " %(filename)
+		if (filename):
+			f = open(filename, 'w')
+	except IOError:
+		print "Exc(0x01): No access to file. Check file permission attributes. Aborting file save..."
+		return
+	filedata = self.textEdit3_Msg.toPlainText()
+	try:
+		f.write(filedata)	
+	except UnboundLocalError:
+		print "Exc(0x03): File pathway variable not initialized. Aborting file load..."		
+		return
+	self.filename2_Msg = filename[:]
+	self.saveAction_Msg.setDisabled(False)
 	f.close()
 
 
-########################################## Test for replacement of images inside tab2 TODO resize and scrolladjustment problems 
     def openFile2_Msg(self):
-	filename = QtGui.QFileDialog.getOpenFileName(MainWindow, 'Open File', os.getenv('PWD'))
-	#filename = 'msgdata.txt'	
+	filename = QtGui.QFileDialog.getOpenFileName(MainWindow, 'Open File', os.getenv('PWD'))	
 	try:
 		if (filename):		
 			f = open(filename, 'r')
@@ -411,45 +517,50 @@ class Ui_MainWindow(object):
 	except UnboundLocalError:
 		print "Exc(0x04): File pathway variable not initialized. Aborting file load..."		
 		return 
-	self.filename2_msg = filename[:]
-	self.saveAction.setDisabled(False)
-	self.textEdit3_msg.setText(filedata)
+	self.filename2_Msg = filename[:]
+	self.saveAction_Msg.setDisabled(False)
+	self.textEdit3_Msg.setText(filedata)
+	self.textEdit3_Msg.setFocus()
 	f.close()
+
 ########################################## ########################################## ########################################## 
 
 
     def test(self):
-	global gCodingDict
-	#print self.page.isVisible()
-	#print self.toolBox.currentIndex()
-	#print self.Message
-	#print "\"" + str(self.Message) + "\""
-	print gCodingDict
+	#for x in range(0,len(MessageContent)): #TODO try KeyError -> dictionary unspecified key handling
+	#			codedMsg = codedMsg + gCodingDict[ord(MessageContent[x])] + "|"
+	#		return codedMsg	
+	#if (gCodingDict.has_key(MessageContent[x])==False):
+	#	return None
 	print str(self.codedMessage)
+    def test2(self):
+	self.lcdNumber.display(0.5)
+	print self.comboBox.currentIndex()
+	print self.checkbox.isChecked()
+	
 
 ################################################################################
 #	RETRANSLATE QT OBJECTS' NAMES 
 ################################################################################
+
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Huffman's Code Demo", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Generate BT", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Specify symbols", None, QtGui.QApplication.UnicodeUTF8))
 	self.pushButton_2.setText(QtGui.QApplication.translate("MainWindow", "Start coding", None, QtGui.QApplication.UnicodeUTF8))
-        self.comboBox.setItemText(0, QtGui.QApplication.translate("MainWindow", "Top-down method", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("MainWindow", "Huffman's Code binary tree generation", None, QtGui.QApplication.UnicodeUTF8))
+	self.pushButton_3.setText(QtGui.QApplication.translate("MainWindow", "Create coding List", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("MainWindow", "Source", None, QtGui.QApplication.UnicodeUTF8))
 	self.label_2.setText(QtGui.QApplication.translate("MainWindow", "Source:", None, QtGui.QApplication.UnicodeUTF8))
 	self.label_3.setText(QtGui.QApplication.translate("MainWindow", "ASCII='char' : population", None, QtGui.QApplication.UnicodeUTF8))
-	self.label_4.setText(QtGui.QApplication.translate("MainWindow", "Message text", None, QtGui.QApplication.UnicodeUTF8))
-	self.label_5.setText(QtGui.QApplication.translate("MainWindow", "Coded Message:", None, QtGui.QApplication.UnicodeUTF8))
-	self.label_6.setText(QtGui.QApplication.translate("MainWindow", "Decoded Message:", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolBox.setItemText(self.toolBox.indexOf(self.page), QtGui.QApplication.translate("MainWindow", "Source", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolBox.setItemText(self.toolBox.indexOf(self.page_2), QtGui.QApplication.translate("MainWindow", "Message", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolBox.setItemText(self.toolBox.indexOf(self.page_3), QtGui.QApplication.translate("MainWindow", "Coded message", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolBox.setItemText(self.toolBox.indexOf(self.page_4), QtGui.QApplication.translate("MainWindow", "Decoded message", None, QtGui.QApplication.UnicodeUTF8))
-        self.toolBox.setItemText(self.toolBox.indexOf(self.page_5), QtGui.QApplication.translate("MainWindow", "Results", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("MainWindow", "Summary", None, QtGui.QApplication.UnicodeUTF8))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("MainWindow", "Binary Tree View", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuMenu.setTitle(QtGui.QApplication.translate("MainWindow", "&Menu", None, QtGui.QApplication.UnicodeUTF8))
-
+	self.label_4.setText(QtGui.QApplication.translate("MainWindow", "Message", None, QtGui.QApplication.UnicodeUTF8))
+	self.label_5.setText(QtGui.QApplication.translate("MainWindow", "Coded message:", None, QtGui.QApplication.UnicodeUTF8))
+	self.label_6.setText(QtGui.QApplication.translate("MainWindow", "Decoded message:", None, QtGui.QApplication.UnicodeUTF8))
+	self.label_7.setText(QtGui.QApplication.translate("MainWindow", "Separate coded symbols", None, QtGui.QApplication.UnicodeUTF8))
+	self.label_8.setText(QtGui.QApplication.translate("MainWindow", "Entropy", None, QtGui.QApplication.UnicodeUTF8))
+	self.label_9.setText(QtGui.QApplication.translate("MainWindow", "Coding eff.", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("MainWindow", "Overall", None, QtGui.QApplication.UnicodeUTF8))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("MainWindow", "Source", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuMenu1_Src.setTitle(QtGui.QApplication.translate("MainWindow", "&Source", None, QtGui.QApplication.UnicodeUTF8))
+	self.menuMenu2_Msg.setTitle(QtGui.QApplication.translate("MainWindow", "&Message", None, QtGui.QApplication.UnicodeUTF8))
 
 ################################################################################
 #	HC'S OPERATIONS 
@@ -458,31 +569,44 @@ class Ui_MainWindow(object):
     def generateHCBinTree(self): 
 	print "Generating BT..."
 	huff_algorithm.clearGlobaVariables()
-	tempText = str(self.textEdit1_src.toPlainText())
+	tempText = str(self.textEdit1_Src.toPlainText())
+	tempText = tempText.replace("\"", " ")
 	tempText = tempText.replace(":", " ")
 	tempText = tempText.replace("\\", " ")	
 	tempText = tempText.replace(";", " ")
-	tempText = tempText.replace("\n", "")
+	tempText = tempText.replace("\n", " ")
 	tempText = tempText.replace("\r", " ")
 	tempText = tempText.replace(">", " ")
 	tempText = tempText.replace("<", " ")	
 	tempText = tempText.replace("/", " ")
 	tempText = tempText.replace("?", " ")
-	tempText = tempText.replace("\"", " ")
+	tempText = tempText.replace("\t", " ")
+	tempText = tempText.replace("{", " ")
+	tempText = tempText.replace("}", " ")
+	tempText = tempText.replace("[", " ")
+	tempText = tempText.replace("]", " ")
 
-	self.textEdit1_src.setText(tempText)
+	self.textEdit1_Src.setText(tempText)
 	if ((len(tempText)<2) | (tempText=="")):	
-		self.textEdit2_srclist.setText("Empty!!")
+		self.textEdit2_Srclist.setText("Source empty!!")
 		return
+
+	# from huff_algorithm.py API
 	self.NodeStorage = huff_algorithm.TBinTree_NodeGenerator(tempText)
 	self.NodeStorage.SortData()
+	self.NodeStorage.Pop2Prob()
 	self.NodeStorage.ListPrint()
 	self.NodeStorage.SortedLeafGen()
 	self.Generator = huff_algorithm.TBinTree_Tree(self.NodeStorage)
 	self.Generator()
 	self.Generator.GraphGen()
 	self.Generator.CodingListGenerator()
-	self.textEdit2_srclist.setText(self.NodeStorage.pListString)
+	self.SourceEntropy = self.NodeStorage.GetSourceEntropy()
+	self.SourceCodEff = self.Generator.GetSourceCodEff()
+	self.lcdNumber.display(self.SourceEntropy)
+	self.lcdNumber_2.display(self.SourceCodEff)
+
+	self.textEdit2_Srclist.setText(self.NodeStorage.pListString)
 	image = QtGui.QImage("BT_graph.png")
 	if image.isNull():
 		print "wrong image file"
@@ -498,9 +622,21 @@ class Ui_MainWindow(object):
 	self.scrollArea.setWidget(self.graphicsView)
 
     def codeMessage(self):
-	self.Message = self.textEdit3_msg.toPlainText()	
-	self.codedMessage = self.Generator.CodeMessage(str(self.Message),1)	
-	self.textEdit4_msgcoded.setText(str(self.codedMessage))
+	self.Message = self.textEdit3_Msg.toPlainText()
+	if (self.Generator!=None) :
+		if (self.checkbox.isChecked()):
+			self.codedMessage = self.Generator.CodeMessage(str(self.Message))
+		else:
+			self.codedMessage = self.Generator.CodeMessage(str(self.Message),1)
+		if (self.codedMessage==None):
+			self.textEdit4_Msgcoded.setText("Symbol not described in Source!!!")				
+			return	
+		self.textEdit4_Msgcoded.setText("".join(self.codedMessage))
+	else :
+		self.textEdit4_Msgcoded.setText("There is no Source!!!") 		
+		return
+
+		
 
 if __name__ == "__main__":
 	import sys
