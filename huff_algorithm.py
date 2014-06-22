@@ -30,7 +30,7 @@ class TBinTree_Node(object):
 	self.b_zero = bin_zero
 # @brief  Object instance behaviour if "print" is used with it
     def __repr__(self):
-	return ("id:%0.3d : %d (%d)<<" % (self.id, self.prob,self.lvl) )
+	return ("id:%0.3d : %f (%d)<<" % (self.id, self.prob, self.lvl) )
 
 # @brief  BT node method to obtain ID
 # @retval Node's ID
@@ -76,10 +76,10 @@ class TBinTree_Leaf(TBinTree_Node):
 	
     def __repr__(self):
 	if (self.lvl ==None):
-		return "\t%.3d=%c id:%0.3d : %.3d\r\n" % (self.symbol, self.symbol,\
+		return "\t%.3d=%c id:%0.3d : %.3f\r\n" % (self.symbol, self.symbol,\
 		self.id,self.prob)
 	else :
-		return "\t%.3d=%c id:%0.3d : %.3d (%d)\r\n" % (self.symbol,self.symbol,\
+		return "\t%.3d=%c id:%0.3d : %.3f (%d)\r\n" % (self.symbol,self.symbol,\
 		self.id,self.prob, self.lvl)
 
 
@@ -129,6 +129,9 @@ class TBinTree_NodeGenerator:
     def SortedLeafGen(self):
 	for leaf_no in range(0, len(self.pSymbolsList_sorted)):
 		self.pBTLeafList.append(TBinTree_Leaf(self.pSymbolsList_sorted[leaf_no][0],self.pSymbolsList_sorted[leaf_no][1]))
+	self.LeafPopulation = len(self.pBTLeafList)
+
+		
 	
     def DictPrint(self):
 	print ("\r\nIn total = %d" % self.pPopulation)
@@ -173,7 +176,9 @@ class TBinTree_Tree:
 	if (option==None):
 		self.root = fBinaryTreeBuilder(self.LeavesList, 0)
 	else :
-		print "other way"
+		self.root = fBinaryTreeBuilderBU(self.LeavesList, 0)		
+	self.AvgCL = fMECalc(self.root)
+
     def ShowBT(self):
 	fBinaryTreeNodeFinder(self.root)
     def GraphGen(self):
@@ -207,18 +212,8 @@ class TBinTree_Tree:
 				return None
 			codedMsg.append(gCodingDict[ord(MessageContent[x])])
 		return codedMsg
-    def	GetSourceCodEff(self):
-	global gCodingDict
-	print "source coding efficiency"
-	CodEff = float(0)
-	temp = int(0)
-	for key,value in gCodingDict.iteritems():
-		CodEff +=len(value);
-		temp += 1
-	CodEff/=temp
-	print CodEff
-	return CodEff
-	
+    def GetAvgCL(self):
+	return self.AvgCL
 
 def DecodeMessage(self,MessageContent):
 	global gTempCodedMsg
@@ -227,14 +222,7 @@ def DecodeMessage(self,MessageContent):
 	while (len(gTempCodedMsg)): #while there are bits of the coded message available run decoding of consecutive symbols in loop 		
 		symbol = fDecodeBit(self.root, gTempCodedMsg)
 		tempString= tempString + chr(symbol) # concatanate character symbol to string			
-		#print "%c" %(symb)
 	return tempString
-	#codedMsg = ""
-	#codedMsg = "|"
-	#print len(MessageContent)
-	#for x in range(0,len(MessageContent)):
-	#	codedMsg = codedMsg + gCodingDict[ord(MessageContent[x])] + "|"
-	#return codedMsg
 	print
 
 global gTempCodedMsg
@@ -269,59 +257,56 @@ def fBinaryTreeBuilder(LeavesList,Level) : # top-down method
 	for i in LeavesList[:] :
 		Population+=i.prob
 	print("\tcounted pop=%d,nodes=%d\n" % (Population, leaves_in_list))
-	if ( leaves_in_list <= 2 ) :
+	if ( leaves_in_list < 3 ) :
 		if (leaves_in_list == 0) : 
 			print "ERROR!->leaf node empty"
 			return None		
 		elif (leaves_in_list == 1) :
-			print "\t1leaf" 
 			total_leaf_prob = LeavesList[0].prob
-			#print("\ttotal prob1 %d" % total_leaf_prob)
-			#print ("lvl:%d"% Level)
-			#print  LeavesList
 			LeavesList[0].UpdateLvl(Level)			
 			return LeavesList[0]
 		elif  (leaves_in_list == 2) :
-			print "\t2leaves"
 			total_leaf_prob = LeavesList[0].prob  + LeavesList[1].prob
-			#print("\ttotal prob2 %d" % total_leaf_prob)
-			#print ("lvl:%d"% Level) 
-			#print  LeavesList
 			LeavesList[0].UpdateLvl(Level+1)
 			LeavesList[1].UpdateLvl(Level+1)
 			NewBTNode = TBinTree_Node(total_leaf_prob,LeavesList[0], LeavesList[1], Level)	
 			return NewBTNode
-		elif (leaves_in_list == 3) :
-			print "\t3leaves" 
-			#if ((LeavesList[0].prob+LeavesList[1].prob)
-			LeavesList[0].UpdateLvl(Level+2)
-			LeavesList[1].UpdateLvl(Level+2)
-			BinaryNodeZero = TBinTree_Node(LeavesList[0].prob+LeavesList[1].prob, LeavesList[0],LeavesList[1],Level+1)
-			LeavesList[2].UpdateLvl(Level+1)
-			return TBinTree_Node( Population, BinaryNodeZero, LeavesList[2], Level)
-			#print LeavesList[index+1:leaves_in_list]
 	else :
-		tempPopulation = float(1)#Population
+		tempPopulation = float(1.0)#Population
 		index = 0
 		prob_sum = 0
 		while ( 1 ) :
 			prob_sum = prob_sum + LeavesList[index].prob
-			if ( (prob_sum<0.501) and (index<(leaves_in_list)-1) ) : 
-		# TODO update this statement to be more precise in case of list splitting along similiar prob
-				#print prob_sum
+			if ( (prob_sum<(0.5*Population)) and (index<(leaves_in_list)-1) ) : 
 				index = index + 1
 			else :
-				#print "\tBREAK"				
 				break
-		print "zero"
-		#print LeavesList[0:index]
-		print
 		BinaryNodeZero = fBinaryTreeBuilder(LeavesList[:index], Level+1)
-		print "one"
 		BinaryNodeOne = fBinaryTreeBuilder(LeavesList[index:], Level+1)
 		return TBinTree_Node( Population, BinaryNodeZero, BinaryNodeOne, Level)
-def fBinaryTreeBuilderTD(LeavesList,Level) : # bottom-up method
-	print "top-down mode"
+def fBinaryTreeBuilderBU(LeavesList,Level) : # bottom-up method
+	print "bottom-up mode"
+	print LeavesList.__class__.__name__
+	print LeavesList
+	while (len(LeavesList)>1):
+		for leafIndex in range(0,len(LeavesList)-1) :
+			if (LeavesList[leafIndex].prob>LeavesList[leafIndex+1].prob):
+				temp = LeavesList.pop(leafIndex)
+				LeavesList.insert(leafIndex+1, temp)
+	
+		newNode = TBinTree_Node(LeavesList[0].prob+LeavesList[1].prob, LeavesList[0], LeavesList[1], 0)
+		LeavesList.insert(0, newNode)
+		LeavesList.pop(1)
+		LeavesList.pop(1)
+	fLvlUpdate(LeavesList[0],0)	
+	return LeavesList[0]
+	
+def fLvlUpdate(CurrentNode, CurrentLevel):
+	CurrentNode.UpdateLvl(CurrentLevel)
+	if ( CurrentNode.__class__.__name__ == 'TBinTree_Node'):
+		fLvlUpdate(CurrentNode.b_zero,CurrentLevel+1)
+		fLvlUpdate(CurrentNode.b_one,CurrentLevel+1)
+	
 
 
 ###################################################################################################################################
@@ -345,7 +330,14 @@ def fBinaryTreeNodeFinder(CurrentNode, Action = None, Code = ""):#, gCodingDict=
 			fBinaryTreeNodeFinder(CurrentNode.b_one, Action,Code = (tempText+'1')) 
 		elif (CurrentNode.__class__.__name__ == 'TBinTree_Leaf'):
 			gCodingDict[CurrentNode.symbol]=Code
-
+		
+def fMECalc(CurrentNode):
+	if (CurrentNode.__class__.__name__ == 'TBinTree_Node'):
+		temp = fMECalc(CurrentNode.b_zero) 
+		return (temp + fMECalc(CurrentNode.b_one) )
+	elif (CurrentNode.__class__.__name__ == 'TBinTree_Leaf'):
+		return CurrentNode.prob*CurrentNode.lvl
+		
 
 
 def fBinaryTreeNodeCartograph(thisNode, Action = None):
@@ -366,7 +358,6 @@ def fBinaryTreeNodeCartograph(thisNode, Action = None):
 			node_zero = fBinaryTreeNodeCartograph(thisNode.b_zero)
 			node_one = fBinaryTreeNodeCartograph(thisNode.b_one)
 			
-
 			draw(node_parent,node_zero)
 			draw(node_parent,node_one)
 			nodeCount=nodeCount+1
@@ -420,19 +411,18 @@ def main():
 	
 	NodeStorage.SortData()
 	#Grader.DictPrint()
+	NodeStorage.Pop2Prob()
 	NodeStorage.ListPrint()
 	NodeStorage.SortedLeafGen()
 	#print Grader.GetNodeList()
 	Generator = TBinTree_Tree(NodeStorage)
-	Generator()
+	Generator(option=1)
 	print "\n\r"
 	Generator.ShowBT()
 	Generator.GraphGen();
-	Generator.CodingListGenerator()
-	codedMsg = Generator.CodeMessage(MessageContent)
-	print codedMsg
-	decodedMsg = Generator.DecodeMessage(codedMsg)
-	print decodedMsg
+	#Generator.CodingListGenerator()
+	#codedMsg = Generator.CodeMessage(MessageContent)
+	#print codedMsg
 
 if __name__ == '__main__':
     main()
