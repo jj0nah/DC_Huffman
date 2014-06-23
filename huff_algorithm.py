@@ -115,6 +115,7 @@ class TBinTree_NodeGenerator:
     def SortData(self): # creates list by sorting symbols along probability
 	for key, value in sorted(self.pSymbolsDict.iteritems(), key=lambda (k,v): (v,k),reverse=False):
 	    	self.pSymbolsList_sorted.append((key,value))
+		
 
     def Pop2Prob(self): # takes total population into consideration and tranlates it into probability
 	for x in range(0,len(self.pSymbolsList_sorted)):
@@ -125,6 +126,9 @@ class TBinTree_NodeGenerator:
 		
 	    	#self.pSymbolsList_sorted[x]=self.pSymbolsList_sorted[x]/self.pPopulation
 	print self.pSymbolsList_sorted
+	
+    def setNewSymbolsDict(self, newDict):
+	self.pSymbolsDict = newDict
 
     def SortedLeafGen(self):
 	for leaf_no in range(0, len(self.pSymbolsList_sorted)):
@@ -161,8 +165,7 @@ class TBinTree_NodeGenerator:
 		temp = self.pSymbolsList_sorted[x][1]
 		Entropy+= temp*np.log2(1.0/temp)
 		print temp
-		print "\t%f" % (Entropy)
-	print "source entropy"
+		print "Source entropy:\t%f" % (Entropy)
 	return Entropy
 
 class TBinTree_Tree:
@@ -183,9 +186,9 @@ class TBinTree_Tree:
 	fBinaryTreeNodeFinder(self.root)
     def GraphGen(self):
 	#global graphen
-	print "Starting graph generating..."
+	print "Starting Source tree graph generation..."
 	fBinaryTreeNodeCartograph(self.root)
-	BTGraph.write_png('BT_graph.png')
+	BTGraph.write_png('SourceTree.png')
 	print "Graph complete."
     def CodingListGenerator(self):
 	global gCodingDict		
@@ -215,42 +218,59 @@ class TBinTree_Tree:
     def GetAvgCL(self):
 	return self.AvgCL
 
-def DecodeMessage(self,MessageContent):
+# @brief  Decoding function as a method of Binary tree class which cooperates with indepednent
+#	  fDecodeBit function which is repeteadly called until the end of coded message.
+#	  Global variable which temporarly stores string is used.
+# @param  Encoded as a string.
+
+    def DecodeMessage(self,MessageContent):
+	print "Commencing message decoding..."
 	global gTempCodedMsg
-	gTempCodedMsg = MessageContent[:] #copy coded message string into global variable string for further manipulations
+	gTempCodedMsg = "".join(MessageContent) #copy coded message string into global variable string for further manipulations
+	gTempCodedMsg = gTempCodedMsg.replace("|","")
+	#print gTempCodedMsg
 	tempString = ""
 	while (len(gTempCodedMsg)): #while there are bits of the coded message available run decoding of consecutive symbols in loop 		
 		symbol = fDecodeBit(self.root, gTempCodedMsg)
-		tempString= tempString + chr(symbol) # concatanate character symbol to string			
+		print symbol
+		tempString = tempString + chr(symbol) # concatanate character symbol to string			
 	return tempString
 	print
 
 global gTempCodedMsg
 gTempCodedMsg = str()
 
+# @brief  Indepednent function which recursively calls itself to explore binary tree until Leaf is reached
+#	  and proper symbol retrieved
+# @param  Current - strarting point for exploring.
+# @param  Piece of encoded message - the compass to navigate between branches.
+
 def fDecodeBit(CurrentNode,CodedMsg):
 	global gTempCodedMsg
 	gTempCodedMsg = CodedMsg
-	#if (CurrentNode!=None):
-	#	print CurrentNode
 	if (CurrentNode.__class__.__name__ == 'TBinTree_Leaf'):
 		return CurrentNode.symbol
 	elif (CurrentNode.__class__.__name__ == 'TBinTree_Node'):
-		if (len(CodedMsg)):
-			gTempCodedMsg = CodedMsg[1:]
+		#if (len(CodedMsg)):
+		#print CodedMsg[0]
 		if (CodedMsg[0]=='0') :
 			return fDecodeBit(CurrentNode.b_zero, CodedMsg[1:])
 		elif (CodedMsg[0]=='1') :
 			return fDecodeBit(CurrentNode.b_one, CodedMsg[1:])
 		else :
-			print "!CodedStringError=notbit!"
+			print "DecodeError 2 Message!"
+	else:
+		print "DecodeError 1 Message!"
 
 
 
+# @brief  Indepednent function with implementation of suboptimal top-down method of source tree generation
+#	  algorithm 
+# @param  List of BTLeaves representing symbols sorted along probability
+# @param  Current level - codelength 
 
-
-#########################!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!###########################################################################
 def fBinaryTreeBuilder(LeavesList,Level) : # top-down method
+	print "Generating Soure tree implementing top-down algorithm."
 	leaves_in_list = len(LeavesList)
 	Population=0
 	print LeavesList
@@ -284,8 +304,14 @@ def fBinaryTreeBuilder(LeavesList,Level) : # top-down method
 		BinaryNodeZero = fBinaryTreeBuilder(LeavesList[:index], Level+1)
 		BinaryNodeOne = fBinaryTreeBuilder(LeavesList[index:], Level+1)
 		return TBinTree_Node( Population, BinaryNodeZero, BinaryNodeOne, Level)
+
+# @brief  Indepednent function with more efficient implementation of bottom-up method of source tree generation
+#	  algorithm. 
+# @param  List of BTLeaves representing symbols sorted along probability
+# @param  Current level - codelength 
+
 def fBinaryTreeBuilderBU(LeavesList,Level) : # bottom-up method
-	print "bottom-up mode"
+	print "Generating Soure tree implementing bottom-up algorithm."
 	print LeavesList.__class__.__name__
 	print LeavesList
 	while (len(LeavesList)>1):
@@ -331,7 +357,7 @@ def fBinaryTreeNodeFinder(CurrentNode, Action = None, Code = ""):#, gCodingDict=
 		elif (CurrentNode.__class__.__name__ == 'TBinTree_Leaf'):
 			gCodingDict[CurrentNode.symbol]=Code
 		
-def fMECalc(CurrentNode):
+def fMECalc(CurrentNode): # or weighted average codelength, called recursively
 	if (CurrentNode.__class__.__name__ == 'TBinTree_Node'):
 		temp = fMECalc(CurrentNode.b_zero) 
 		return (temp + fMECalc(CurrentNode.b_one) )

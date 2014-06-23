@@ -38,6 +38,81 @@ class SourceTextEdit(QtGui.QTextEdit):
 	#	#print Grader.GetNodeList()
 	#	Generator = huff_algorithm.TBinTree_Tree(NodeStorage)
 		
+class SymbolInput(QtGui.QWidget):
+    def __init__(self, parent=None):
+        super(SymbolInput, self).__init__(parent)
+
+	vLayout = QtGui.QVBoxLayout()
+	vLayout.setContentsMargins(0,0,0,0)
+	vLayout.setSpacing(0)
+	
+	self.firstWidget = QtGui.QWidget(self)
+	hLayout = QtGui.QHBoxLayout()
+	self.firstWidget.setLayout(hLayout)
+	
+        self.lineEdit = QtGui.QLineEdit(self.firstWidget)
+        #self.lineEdit.setGeometry(QtCore.QRect(10, 5, 71, 26))
+        self.lineEdit.setMaxLength(1)
+ 	self.lineEdit.setTextMargins(45,0,45,0) 
+	self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
+	hLayout.addWidget(self.lineEdit)
+	
+        self.doubleSpinBox = QtGui.QDoubleSpinBox(self.firstWidget)
+        #self.doubleSpinBox.setGeometry(QtCore.QRect(91, 5, 81, 26))
+        self.doubleSpinBox.setMaximum(1.0)
+	self.doubleSpinBox.setDecimals(3)
+        self.doubleSpinBox.setSingleStep(0.001)
+	#self.doubleSpinBox.setButtonSymbols(QtGui.QAbstractSpinBox.PlusMinus)
+        self.doubleSpinBox.setObjectName(_fromUtf8("doubleSpinBox"))
+	hLayout.addWidget(self.doubleSpinBox)
+	
+	vLayout.addWidget(self.firstWidget)
+	
+        self.checkBox = QtGui.QCheckBox(self)
+        #self.checkBox.setGeometry(QtCore.QRect(10, 30, 93, 26))
+        self.checkBox.setObjectName(_fromUtf8("checkBox"))
+	self.checkBox.setText(QtGui.QApplication.translate("MainWindow", "Lock", None, QtGui.QApplication.UnicodeUTF8))
+	vLayout.addWidget(self.checkBox)
+	
+        self.line = QtGui.QFrame()
+        #self.line.setGeometry(QtCore.QRect(0, 430, 190, 20))
+	self.line.setLineWidth(1)
+        self.line.setFrameShape(QtGui.QFrame.HLine)
+        self.line.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line.setObjectName(_fromUtf8("line"))
+	vLayout.addWidget(self.line)
+	
+	self.setLayout(vLayout)
+
+	QtCore.QObject.connect(self.doubleSpinBox, QtCore.SIGNAL(_fromUtf8("valueChanged (const QString&)")), ui.verifyProbabilities)
+	QtCore.QObject.connect(self.checkBox, QtCore.SIGNAL(_fromUtf8("stateChanged(int)")), self.lockSpinBox)
+
+    def getValue(self):
+	#print self.doubleSpinBox.value()
+	return self.doubleSpinBox.value()
+    def getSymbol(self):
+	#print self.lineEdit.text()
+	return self.lineEdit.text()
+    def isLocked(self):
+	#print self.checkBox.isChecked()
+	return self.checkBox.isChecked()
+    def lockSpinBox(self):
+	if (self.checkBox.isChecked()):
+		self.doubleSpinBox.setReadOnly(True)
+	else :
+		self.doubleSpinBox.setReadOnly(False)
+    def setValue(self, newValue):
+	self.checkBox.setValue(newValue)
+    def setMaximum(self, newValue):
+	self.doubleSpinBox.setMaximum(newValue)
+
+
+
+	
+
+      #	layout = QtGui.QHBoxLayout()
+      #	layout.addWidget(self.pushButton)
+      #	self.setLayout(layout)
 
 class MessageTextEdit(QtGui.QTextEdit):
 	@QtCore.pyqtSlot()
@@ -215,35 +290,86 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab, _fromUtf8(""))
 
         self.label_2 = QtGui.QLabel(self.tab)
-        self.label_2.setGeometry(QtCore.QRect(14, 14, 180, 20))
+        self.label_2.setGeometry(QtCore.QRect(294, 14, 180, 40))
         self.label_2.setObjectName(_fromUtf8("label_2"))
 
         self.label_3 = QtGui.QLabel(self.tab)
-        self.label_3.setGeometry(QtCore.QRect(14, 38, 180, 20))
+        self.label_3.setGeometry(QtCore.QRect(294, 38, 180, 20))
         self.label_3.setObjectName(_fromUtf8("label_3"))
 
         self.textEdit2_Srclist = QtGui.QTextEdit(self.tab)
-        self.textEdit2_Srclist.setGeometry(QtCore.QRect(14, 66, 170, 622))
+        self.textEdit2_Srclist.setGeometry(QtCore.QRect(294, 66, 170, 622))
         self.textEdit2_Srclist.setObjectName(_fromUtf8("textEdit_2"))
 	self.textEdit2_Srclist.setReadOnly(True)
 
+
+        self.line_2 = QtGui.QFrame(self.tab)
+        self.line_2.setGeometry(QtCore.QRect(492, 16, 10, 672))
+	self.line_2.setLineWidth(2)
+        self.line_2.setFrameShape(QtGui.QFrame.VLine)
+        self.line_2.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line_2.setObjectName(_fromUtf8("line_2"))
+
+#### Encoded/Decoded part
 	self.label_5 = QtGui.QLabel(self.tab)
-        self.label_5.setGeometry(QtCore.QRect(198, 14, 180, 20))
+        self.label_5.setGeometry(QtCore.QRect(528, 14, 180, 20))
         self.label_5.setObjectName(_fromUtf8("label_5"))
 
       	self.textEdit4_Msgcoded = QtGui.QTextEdit(self.tab)
-        self.textEdit4_Msgcoded.setGeometry(QtCore.QRect(198, 66, 350, 200))
+        self.textEdit4_Msgcoded.setGeometry(QtCore.QRect(528, 66, 350, 200))
         self.textEdit4_Msgcoded.setObjectName(_fromUtf8("textEdit_4"))
 	self.textEdit4_Msgcoded.setReadOnly(True)
 
 	self.label_6 = QtGui.QLabel(self.tab)
-        self.label_6.setGeometry(QtCore.QRect(198, 276, 180, 20))
+        self.label_6.setGeometry(QtCore.QRect(528, 306, 180, 20))
         self.label_6.setObjectName(_fromUtf8("label_6"))
 
       	self.textEdit5_decoded = QtGui.QTextEdit(self.tab)
-        self.textEdit5_decoded.setGeometry(QtCore.QRect(198, 322, 350, 180))
+        self.textEdit5_decoded.setGeometry(QtCore.QRect(528, 352, 350, 200))
         self.textEdit5_decoded.setObjectName(_fromUtf8("textEdit_5"))
 	self.textEdit5_decoded.setReadOnly(True)
+
+
+#### Symbol Input Boxes part -> Probability Input
+	self.label_12 = QtGui.QLabel(self.tab)
+        self.label_12.setGeometry(QtCore.QRect(20, 16, 180, 40))
+        self.label_12.setObjectName(_fromUtf8("label_12"))
+
+	self.coverWidget = QtGui.QWidget(self.tab)
+	self.coverWidget.setGeometry(QtCore.QRect(10, 66, 250, 572))
+	
+	self.scrollLayout = QtGui.QFormLayout()
+
+        self.scrollWidget = QtGui.QWidget()
+	self.scrollWidget.setLayout(self.scrollLayout)
+
+
+	self.scrollArea_2 = QtGui.QScrollArea()
+
+	self.scrollArea_2.setWidgetResizable(True)
+	self.scrollArea_2.setWidget(self.scrollWidget)
+	
+	self.mainLayout = QtGui.QVBoxLayout()
+	self.mainLayout.addWidget(self.scrollArea_2)
+	self.coverWidget.setLayout(self.mainLayout)
+
+######
+	self.InputBoxes = list()
+	self.addInputBox()
+	self.addInputBox()
+
+	self.pushButton_4 = QtGui.QPushButton(self.tab)
+        self.pushButton_4.setGeometry(QtCore.QRect(18, 644, 110, 40))
+        self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
+	
+	self.pushButton_5 = QtGui.QPushButton(self.tab)
+        self.pushButton_5.setGeometry(QtCore.QRect(140, 644, 114, 40))
+        self.pushButton_5.setObjectName(_fromUtf8("pushButton_5"))
+
+        # scroll area widget contents
+        
+
+	#self.addInputBox() 	
 	#self.textEdit2_Srclist.connect(self.textEdit1_Src,QtCore.SIGNAL("textChanged()"),self.textEdit1_Src,QtCore.SLOT("slotTextChanged()"))
 
 ################################################################################
@@ -323,8 +449,9 @@ class Ui_MainWindow(object):
         self.menuMenu1_Src.addAction(self.saveAction_Src)
 	self.menuMenu1_Src.addAction(self.saveAsAction_Src)
         self.menuMenu1_Src.addAction(self.openAction_Src)
+	self.menuMenu1_Src.addSeparator()
         self.menuMenu1_Src.addAction(self.closeAction_Src)
-	self.menuMenu1_Src.addAction(self.testAction_Src)
+	#self.menuMenu1_Src.addAction(self.testAction_Src)
 
 ################################################################################
 ###### MENU2 OBJECT - Message
@@ -361,7 +488,7 @@ class Ui_MainWindow(object):
         self.menuMenu2_Msg.addAction(self.saveAction_Msg)
 	self.menuMenu2_Msg.addAction(self.saveAsAction_Msg)
         self.menuMenu2_Msg.addAction(self.openAction_Msg)
-	self.menuMenu2_Msg.addAction(self.testAction_Msg)
+	#self.menuMenu2_Msg.addAction(self.testAction_Msg)
 
 ################################################################################
 
@@ -384,12 +511,43 @@ class Ui_MainWindow(object):
 ################################################################################
 
 	
-	QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.test2)
+	QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.symbolInput)
 	QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL(_fromUtf8("clicked()")), self.codeMessage)
 	QtCore.QObject.connect(self.pushButton_3, QtCore.SIGNAL(_fromUtf8("clicked()")), self.generateHCBinTree)
+	QtCore.QObject.connect(self.pushButton_4, QtCore.SIGNAL(_fromUtf8("clicked()")), self.addInputBox)
+	QtCore.QObject.connect(self.pushButton_5, QtCore.SIGNAL(_fromUtf8("clicked()")), self.removeInputBox)
 	QtCore.QObject.connect(self.checkbox_2, QtCore.SIGNAL(_fromUtf8("stateChanged(int)")), self.zoomTree)
 
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+	
+    def verifyProbabilities(self) :
+		totalProb = 1.0
+		unlockedBoxes = list()
+		lockedBoxes = list()
+		for x in range(0,len(self.InputBoxes)) :
+			if (self.InputBoxes[x].isLocked()==True):
+				lockedBoxes.append(x)
+				totalProb -= self.InputBoxes[x].getValue()
+			else :
+				unlockedBoxes.append(x)
+
+		for x in unlockedBoxes:
+			self.InputBoxes[x].setMaximum(round(totalProb,3))
+			totalProb -= self.InputBoxes[x].getValue()
+    def getInputBoxSymbols(self) :
+		totalProb = 1.0
+		unlockedBoxes = list()
+		lockedBoxes = list()
+		for x in range(0,len(self.InputBoxes)) :
+			if (self.InputBoxes[x].isLocked()==True):
+				lockedBoxes.append(x)
+				totalProb -= self.InputBoxes[x].getValue()
+			else :
+				unlockedBoxes.append(x)
+
+		for x in unlockedBoxes:
+			self.InputBoxes[x].setMaximum(round(totalProb,3))
+			totalProb -= self.InputBoxes[x].getValue()
 
 ################# Menu Actions ##################################################################
 
@@ -568,15 +726,38 @@ class Ui_MainWindow(object):
 
 
     def test(self):
-	self.adjustImage()	
-
+	print "destroying..."
+	if (len(self.InputBoxes)):
+		tempInputBox = self.InputBoxes.pop()
+		tempInputBox.remove()
     def test2(self):
-	self.graphicsView.resize(self.graphicsView.size()*1.2)
-	print self.comboBox.currentIndex()
-	print self.checkbox.isChecked()
-
-
+	print "destroying..."
+	if (len(self.InputBoxes)):
+		tempInputBox = self.InputBoxes.pop()
+		tempInputBox.remove()
 	
+    def symbolInput(self):
+	if (self.pushButton.text()=="Symbols from Text"):
+		self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Symbols from Prob.IB", None, QtGui.QApplication.UnicodeUTF8))
+	else :
+		self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Symbols from Text", None, QtGui.QApplication.UnicodeUTF8))
+
+    def removeInputBox(self):
+	print "destroying symbol input box..."
+	if (len(self.InputBoxes)):
+		tempInputBox = self.InputBoxes.pop()
+		tempInputBox.deleteLater()
+		self.verifyProbabilities()
+
+
+    def addInputBox(self):
+	print "creating symbol input box..."
+	boxShift = len(self.InputBoxes)
+	tempInputBox = SymbolInput()
+	self.scrollLayout.addRow(tempInputBox)
+	self.InputBoxes.append(tempInputBox)
+	self.verifyProbabilities()
+
 	
 
 ################################################################################
@@ -585,20 +766,23 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Huffman's Code Demo", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Specify symbols", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Symbols from Text", None, QtGui.QApplication.UnicodeUTF8))
 	self.pushButton_2.setText(QtGui.QApplication.translate("MainWindow", "Start coding", None, QtGui.QApplication.UnicodeUTF8))
 	self.pushButton_3.setText(QtGui.QApplication.translate("MainWindow", "Create coding List", None, QtGui.QApplication.UnicodeUTF8))
+	self.pushButton_4.setText(QtGui.QApplication.translate("MainWindow", "Add symbol", None, QtGui.QApplication.UnicodeUTF8))
+	self.pushButton_5.setText(QtGui.QApplication.translate("MainWindow", "Remove symbol", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MainWindow", "Source", None, QtGui.QApplication.UnicodeUTF8))
-	self.label_2.setText(QtGui.QApplication.translate("MainWindow", "Source:", None, QtGui.QApplication.UnicodeUTF8))
-	self.label_3.setText(QtGui.QApplication.translate("MainWindow", "ASCII='char' : population", None, QtGui.QApplication.UnicodeUTF8))
+	self.label_2.setText(QtGui.QApplication.translate("MainWindow", "Source Symbols:\nASCII='char' : probability", None, QtGui.QApplication.UnicodeUTF8))
+	#self.label_3.setText(QtGui.QApplication.translate("MainWindow", "ASCII='char' : probability", None, QtGui.QApplication.UnicodeUTF8))
 	self.label_4.setText(QtGui.QApplication.translate("MainWindow", "Message", None, QtGui.QApplication.UnicodeUTF8))
-	self.label_5.setText(QtGui.QApplication.translate("MainWindow", "Coded message:", None, QtGui.QApplication.UnicodeUTF8))
+	self.label_5.setText(QtGui.QApplication.translate("MainWindow", "Encoded message:", None, QtGui.QApplication.UnicodeUTF8))
 	self.label_6.setText(QtGui.QApplication.translate("MainWindow", "Decoded message:", None, QtGui.QApplication.UnicodeUTF8))
 	self.label_7.setText(QtGui.QApplication.translate("MainWindow", "Separate coded symbols", None, QtGui.QApplication.UnicodeUTF8))
 	self.label_8.setText(QtGui.QApplication.translate("MainWindow", "Entropy", None, QtGui.QApplication.UnicodeUTF8))
 	self.label_9.setText(QtGui.QApplication.translate("MainWindow", "Efficiency", None, QtGui.QApplication.UnicodeUTF8))
 	self.label_10.setText(QtGui.QApplication.translate("MainWindow", "Avg.codelength", None, QtGui.QApplication.UnicodeUTF8))
 	self.label_11.setText(QtGui.QApplication.translate("MainWindow", "Zoom Source View", None, QtGui.QApplication.UnicodeUTF8))
+	self.label_12.setText(QtGui.QApplication.translate("MainWindow", "Probability Input Box\nfor Source:", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QtGui.QApplication.translate("MainWindow", "Overall", None, QtGui.QApplication.UnicodeUTF8))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QtGui.QApplication.translate("MainWindow", "Source View", None, QtGui.QApplication.UnicodeUTF8))
         self.menuMenu1_Src.setTitle(QtGui.QApplication.translate("MainWindow", "&Source", None, QtGui.QApplication.UnicodeUTF8))
@@ -607,26 +791,26 @@ class Ui_MainWindow(object):
 ################################################################################
 #	HC'S OPERATIONS 
 ################################################################################    
+    def validateSource(self,tempText):
+	forbiddenSymbols = ["\"",":","\\",";","\n",">","<","/","?","\t"	,"{", "}", "[", "]","|"]
+	for x in range(0,len(forbiddenSymbols)):
+		tempText = tempText.replace(forbiddenSymbols[x], "")
+	return tempText
 
     def generateHCBinTree(self): 
-	print "Generating BT..."
+	print "Generating Source Tree..."
 	huff_algorithm.clearGlobaVariables()
+	self.checkbox_2.setCheckState(QtCore.Qt.Unchecked)
+
+	if (self.pushButton.text()=="Symbols from Text"):
+		self.useTextEditSymbolsInput()
+	else :
+		self.useProbSymbolsInput()
+
+    def useTextEditSymbolsInput(self) :
 	tempText = str(self.textEdit1_Src.toPlainText())
-	tempText = tempText.replace("\"", " ")
-	tempText = tempText.replace(":", " ")
-	tempText = tempText.replace("\\", " ")	
-	tempText = tempText.replace(";", " ")
-	tempText = tempText.replace("\n", " ")
-	tempText = tempText.replace("\r", " ")
-	tempText = tempText.replace(">", " ")
-	tempText = tempText.replace("<", " ")	
-	tempText = tempText.replace("/", " ")
-	tempText = tempText.replace("?", " ")
-	tempText = tempText.replace("\t", " ")
-	tempText = tempText.replace("{", " ")
-	tempText = tempText.replace("}", " ")
-	tempText = tempText.replace("[", " ")
-	tempText = tempText.replace("]", " ")
+	tempText = self.validateSource(tempText)
+
 
 	self.textEdit1_Src.setText(tempText)
 	if ((len(tempText)<2) | (tempText=="")):	
@@ -657,21 +841,99 @@ class Ui_MainWindow(object):
 	print self.SourceCodEff
 
 	self.textEdit2_Srclist.setText(self.NodeStorage.pListString)
-	image = QtGui.QImage("BT_graph.png")
+	image = QtGui.QImage("SourceTree.png")
 	if image.isNull():
 		print "wrong image file"
 		return	
-	self.picture = QtGui.QPixmap("BT_graph.png")
+	self.picture = QtGui.QPixmap("SourceTree.png")
 	self.graphicsView.resize(self.picture.size())
 	self.graphicsView.setPixmap(QtGui.QPixmap.fromImage(image))
 	self.adjustImage()
+
+    def useProbSymbolsInput(self) :
+	# Searching for empty LineEdits
+	for x in range(0, len(self.InputBoxes)):
+		isSingle = len(self.InputBoxes[x].getSymbol())
+		if (isSingle!=1):
+			self.textEdit2_Srclist.setText("Symbol Input Box empty!!")
+			return 
+
+	# Getting string composed of all specified symbols
+	tempString = ""
+	for x in range(0, len(self.InputBoxes)):
+		tempString+=self.InputBoxes[x].getSymbol()
+	print tempString
+	
+	# Searching for forbidden symbols
+	forbiddenSymbols = ["\"",":","\\",";","\n",">","<","/","?","\t"	,"{", "}", "[", "]","|"]
+	
+	for x in range(0, len(forbiddenSymbols)):
+		if (tempString.count(forbiddenSymbols[x])):
+			self.textEdit2_Srclist.setText("Forbidden symbol encountered!!")
+			return
+	
+	# Searching for multiple single symbols insertion
+	for x in range(32, 132):
+		if (tempString.count(chr(x))>1):
+			self.textEdit2_Srclist.setText("Multiple insertion of the same symbol encountered!!")
+			return
+	# Chech if the sum of probabilities is equal (close -> float type) as possible to 1.0
+	probSum = float(0.0)
+	for x in range(0, len(self.InputBoxes)):
+		probSum += self.InputBoxes[x].getValue()
+	if (probSum<0.99999):
+		self.textEdit2_Srclist.setText("Probability not distributed properly!!")
+		return
+	
+	symbolDict = dict()
+	for x in range(0, len(self.InputBoxes)):
+		if (self.InputBoxes[x].getValue()>0):
+			symbol = str(self.InputBoxes[x].getSymbol())
+			prob = self.InputBoxes[x].getValue()
+			symbolDict[ord(symbol[0])]=prob
+
+	self.NodeStorage = huff_algorithm.TBinTree_NodeGenerator(" ")
+	
+	self.NodeStorage.setNewSymbolsDict(symbolDict)		
+	self.NodeStorage.SortData()
+	self.NodeStorage.Pop2Prob()
+	self.NodeStorage.ListPrint()
+	self.NodeStorage.SortedLeafGen()
+	self.Generator = huff_algorithm.TBinTree_Tree(self.NodeStorage)
+	if (self.comboBox.currentIndex()==0):
+		self.Generator()
+	else :
+		self.Generator(0)
+	self.Generator.GraphGen()
+	self.Generator.CodingListGenerator()
+
+	self.SourceEntropy = self.NodeStorage.GetSourceEntropy()
+	self.SourceAvgCL = self.Generator.GetAvgCL()
+	self.SourceCodEff = self.SourceEntropy/self.SourceAvgCL
+
+	self.lcdNumber.display(self.SourceEntropy)
+	self.lcdNumber_2.display(self.SourceCodEff)
+	self.lcdNumber_3.display(self.SourceAvgCL)
+	print self.SourceCodEff
+
+	self.textEdit2_Srclist.setText(self.NodeStorage.pListString)
+	image = QtGui.QImage("SourceTree.png")
+	if image.isNull():
+		print "wrong image file"
+		return	
+	self.picture = QtGui.QPixmap("SourceTree.png")
+	self.graphicsView.resize(self.picture.size())
+	self.graphicsView.setPixmap(QtGui.QPixmap.fromImage(image))
+	self.adjustImage()
+
+	
 
     def adjustImage(self):
 	imageHeigh = self.graphicsView.size().height()
 	frameHeigh = self.scrollArea.size().height()
 	if (imageHeigh<frameHeigh):
 		return
-	ratio = float(frameHeigh)/int(imageHeigh+50)
+	ratio = float(frameHeigh)/int(imageHeigh*1.04)
 	self.graphicsView.resize(self.graphicsView.size()*ratio)
 
     def zoomTree(self):
@@ -693,13 +955,15 @@ class Ui_MainWindow(object):
 		else:
 			self.codedMessage = self.Generator.CodeMessage(str(self.Message),1)
 		if (self.codedMessage==None):
-			self.textEdit4_Msgcoded.setText("Symbol not described in Source!!!")				
+			self.textEdit4_Msgcoded.setText("Symbol not specified in Source!!!")				
 			return	
 		self.textEdit4_Msgcoded.setText("".join(self.codedMessage))
 	else :
-		self.textEdit4_Msgcoded.setText("There is no Source!!!") 		
+		self.textEdit4_Msgcoded.setText("Source not specified!!!") 		
 		return
 
+	decodedMsg = self.Generator.DecodeMessage(self.codedMessage)
+	self.textEdit5_decoded.setText(decodedMsg) 
 		
 
 if __name__ == "__main__":
