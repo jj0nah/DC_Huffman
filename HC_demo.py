@@ -719,7 +719,7 @@ class Ui_MainWindow(object):
                 "<b>Start coding </b> button. Application accepts mostly "
 		"alphabetical symbols. Unacceptable ones are exchanged with spaces.</p>"
                 "<p><b>Project Assessment related to Digital Communications course.</p>"
-                "<p><b>Jarek Kiec, Electronics and Telecommunications, 3rd Year</p>"
+                "<p><b>J.Kiec, M.Blaszkiewicz, Electronics and Telecommunications, 3rd Year</p>"
 		"<p><b>AGH University of Science and Technology, June 2014"
                 "</p>")
 ########################################## ########################################## ########################################## 
@@ -767,8 +767,8 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Huffman's Code Demo", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Symbols from Text", None, QtGui.QApplication.UnicodeUTF8))
-	self.pushButton_2.setText(QtGui.QApplication.translate("MainWindow", "Start coding", None, QtGui.QApplication.UnicodeUTF8))
-	self.pushButton_3.setText(QtGui.QApplication.translate("MainWindow", "Create coding List", None, QtGui.QApplication.UnicodeUTF8))
+	self.pushButton_2.setText(QtGui.QApplication.translate("MainWindow", "Start Encoding", None, QtGui.QApplication.UnicodeUTF8))
+	self.pushButton_3.setText(QtGui.QApplication.translate("MainWindow", "Create Encoding Dict.t", None, QtGui.QApplication.UnicodeUTF8))
 	self.pushButton_4.setText(QtGui.QApplication.translate("MainWindow", "Add symbol", None, QtGui.QApplication.UnicodeUTF8))
 	self.pushButton_5.setText(QtGui.QApplication.translate("MainWindow", "Remove symbol", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("MainWindow", "Source", None, QtGui.QApplication.UnicodeUTF8))
